@@ -19,8 +19,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         // Consult the README on instructions for setting up Unsplash API key
-        buildConfigField "String", "UNSPLASH_ACCESS_KEY", "my_unsplah_acces_key"
-        buildConfigField "String", "UNSPLASH_SECRET_KEY", "my_unsplah_secret_key"
+        buildConfigField "String", "UNSPLASH_ACCESS_KEY", "\"my_unsplah_acces_key\""
+        buildConfigField "String", "UNSPLASH_SECRET_KEY", "\"my_unsplah_secret_key\""
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
