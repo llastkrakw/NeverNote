@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#fb2664</color>
+    <color name="secondaryColor">#ffb505</color>
+    <color name="black">#252525</color>
+    <color name="white">#fefefe</color>
+    <color name="ic_launcher_background">#FEFEFE</color>
+    <color name="hidden_text">#707C80</color>
+    <color name="search_button_color">#A92E3232</color>
+    <color name="search_button_color_light">#ededed</color>
+    <color name="hidden_text_light">#989898</color>
+    <color name="blue">#4E33FF</color>
+    <color name="categorizeColor">#72FFB505</color>
+
+    <!-- Random color for ui -->
+    <color name="random_color_1">#ffab91</color>
+    <color name="random_color_2">#ffcc80</color>
+    <color name="random_color_3">#e6ee9b</color>
+    <color name="random_color_4">#80deea</color>
+    <color name="random_color_5">#cf93d9</color>
+    <color name="random_color_6">#80cbc4</color>
+    <color name="random_color_7">#ffa447</color>
+    <color name="random_color_8">#ffa6c4</color>
+</resources>

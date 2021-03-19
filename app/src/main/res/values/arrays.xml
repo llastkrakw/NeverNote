@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="random_color">
+        <item>@color/random_color_1</item>
+        <item>@color/random_color_2</item>
+        <item>@color/random_color_3</item>
+        <item>@color/random_color_4</item>
+        <item>@color/random_color_5</item>
+        <item>@color/random_color_6</item>
+        <item>@color/random_color_7</item>
+        <item>@color/random_color_8</item>
+    </array>
+</resources>

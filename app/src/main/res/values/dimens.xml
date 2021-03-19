@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="app_padding" type="dimen">15dp</item>
+    <item name="view_pager_space" type="dimen">15dp</item>
+    <item name="actions_space" type="dimen">20dp</item>
+</resources>
