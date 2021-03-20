@@ -219,23 +219,28 @@ class Editor(@NotNull private var editText: EditText){
     * */
 
    fun makeBold(){
-        bold(state.content.toSpannable(), editText)
+       if (!verifySelection())
+            bold(state.content.toSpannable(), editText)
    }
 
    fun makeItalic(){
-       italic(state.content.toSpannable(), editText)
+       if (!verifySelection())
+            italic(state.content.toSpannable(), editText)
    }
 
    fun makeUnderline(){
-       underline(state.content.toSpannable(), editText)
+       if (!verifySelection())
+            underline(state.content.toSpannable(), editText)
    }
 
    fun increaseSize(){
-       size(size + 2.5f, state.content.toSpannable(), editText)
+       if (!verifySelection())
+            size(size + 2.5f, state.content.toSpannable(), editText)
    }
 
    fun setColor(color: Int){
-       setColor(color, state.content.toSpannable(), editText)
+       if (!verifySelection())
+            setColor(color, state.content.toSpannable(), editText)
    }
 
    fun setUrl(url: CharSequence){
@@ -251,4 +256,9 @@ class Editor(@NotNull private var editText: EditText){
    fun alignLeft(){
        spanAlignmentLeft(editText)
    }
+
+   private fun verifySelection() : Boolean{
+       return editText.selectionEnd == editText.selectionStart
+   }
+
 }
