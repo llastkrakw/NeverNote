@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,7 @@ import com.llastkrakw.nevernote.core.utilities.FormatUtils.Companion.toSimpleStr
 import com.llastkrakw.nevernote.core.utilities.picassoLoader
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.views.notes.activities.NoteDetailActivity
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -121,23 +123,46 @@ class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: L
 
         override fun onClick(v: View?) {
             val intentDetail = Intent(v?.context, NoteDetailActivity::class.java)
-            noteViewModel.allNotesAscWithFolders.observe(owner, { notes ->
-                notes?.let { currentNotes ->
-                    currentNotes.filter {
-                        currentNote.noteId == it.note.noteId
-                    }.let { newNoteList ->
-                        if(newNoteList.isNotEmpty()){
-                            Log.d("categorize", "notes number ${newNoteList.size}")
-                            Log.d("categorize", "selected ${newNoteList.first().note.noteId} have ${newNoteList.first().folders.size} folder")
-                            intentDetail.putExtra(NOTE_EXTRA, newNoteList.first())
-                        }
+
+            noteViewModel.selectedNotes.observe(owner, {
+
+                if(it.isNotEmpty()){
+                    Log.d("multi", it.toString())
+                    if(it.contains(currentNote)){
+                        Log.d("multi", "note clicked ${currentNote.noteId}")
+                        check.visibility = View.GONE
+                        noteViewModel.deselectNote(currentNote)
+                    }
+                    else{
+                        Log.d("multi", "note clicked ${currentNote.noteId}")
+                        check.visibility = View.VISIBLE
+                        noteViewModel.selectNote(currentNote)
                     }
                 }
+                else{
+                    Log.d("categorize", "notes detail")
+                    noteViewModel.viewModelScope.launch {
+                        noteViewModel.allNotesAscWithFolders.observe(owner,{ notes ->
 
-            }).runCatching {
-                Log.d("start", "activity started")
-                v?.context?.startActivity(intentDetail)
-            }
+                            notes.let { currentNotes ->
+                                Log.d("categorize", "notes number ${notes.size}")
+                                currentNotes.filter { noteWithFolder ->
+                                    currentNote.noteId == noteWithFolder.note.noteId
+                                }.let { newNoteList ->
+                                    if(newNoteList.isNotEmpty()){
+                                        Log.d("categorize", "notes number ${newNoteList.size}")
+                                        Log.d("categorize", "selected ${newNoteList.first().note.noteId} have ${newNoteList.first().folders.size} folder")
+                                        intentDetail.putExtra(NOTE_EXTRA, newNoteList.first())
+                                        v?.context?.startActivity(intentDetail)
+                                    }
+                                }
+                            }
+
+                        })
+                    }
+                }
+            })
+
         }
     }
 
