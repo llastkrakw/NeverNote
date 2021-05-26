@@ -43,6 +43,14 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
         _isGrid.value = value
     }
 
+    private var list = mutableListOf<NoteWithFolders>()
+
+    init {
+        allNotesAscWithFolders.observeForever(Observer {
+            list = it.toMutableList()
+        })
+    }
+
     /*
     *
     * Note
@@ -51,6 +59,10 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
 
     fun insertNote(note: Note) = viewModelScope.launch {
         noteRepository.insertNote(note)
+    }
+
+    fun updateNote(note: Note) = viewModelScope.launch {
+        noteRepository.updateNote(note)
     }
 
 
@@ -84,8 +96,15 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
     }
 
     private fun verifyCleared(){
-        _isCleared.value = _selectedNotes.value?.isEmpty() == true
+        _isCleared.value = _selectedNotes.value?.isEmpty()
     }
+
+
+    fun retrieveNoteWithFolder(id : Int) : NoteWithFolders? {
+        Log.d("go_detail", list.size.toString())
+        return list.firstOrNull { noteWithFolders -> noteWithFolders.note.noteId == id }
+    }
+
 
     fun addNoteReminder(note: NoteWithFolders, selectedTime : Long) = viewModelScope.launch {
 
@@ -95,12 +114,14 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
 
         notifyIntent.putExtra(NOTIFICATION_NOTE_EXTRA, bytes)
 
-        val notifyPendingIntent = PendingIntent.getBroadcast(
+        val notifyPendingIntent = note.note.noteId?.let {
+            PendingIntent.getBroadcast(
                 app,
-                NOTIFICATION_NOTE_REQUEST_CODE,
+                it,
                 notifyIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
-        )
+            )
+        }
 
 /*        val notificationManager = ContextCompat.getSystemService(
                 app,
@@ -108,12 +129,25 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
         ) as NotificationManager
         notificationManager.sendNotification(app, note)*/
 
-        AlarmManagerCompat.setExactAndAllowWhileIdle(
+        Log.d("timer", selectedTime.toString())
+        Log.d("timer", "warr papa")
+
+/*        AlarmManagerCompat.setExactAndAllowWhileIdle(
                 alarmManager,
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 selectedTime,
                 notifyPendingIntent
-        )
+        )*/
+
+        if (notifyPendingIntent != null) {
+            AlarmManagerCompat.setAlarmClock(
+                alarmManager,
+                selectedTime,
+                notifyPendingIntent,
+                notifyPendingIntent
+            )
+        }
+
     }
 
     /*

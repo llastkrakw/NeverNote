@@ -44,7 +44,7 @@ class SearchNoteActivity : AppCompatActivity() {
             noteRecycler.adapter = noteAdapter
             noteRecycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-            noteViewModel.allNotesAsc.observe(this@SearchNoteActivity, Observer { notes ->
+            noteViewModel.allNotesAscWithFolders.observe(this@SearchNoteActivity, Observer { notes ->
                 notes?.let { noteAdapter.submitList(it) }
             })
 
@@ -62,7 +62,7 @@ class SearchNoteActivity : AppCompatActivity() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    noteViewModel.allNotesAsc.value?.let { noteAdapter.performFiltering(s, it) }
+                    noteViewModel.allNotesAscWithFolders.value?.let { noteAdapter.performFiltering(s, it) }
                 }
 
             })

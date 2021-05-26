@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NeverNote">
+        <activity android:name=".views.notes.activities.NoteCalendarView"/>
+        <activity android:name=".views.task.activities.TaskCalendarView"/>
         <activity android:name=".views.task.activities.SearchTaskActivity" />
         <activity android:name=".views.notes.activities.FolderDetailActivity" />
         <activity android:name=".views.notes.activities.NoteDetailActivity" />
@@ -32,13 +34,14 @@
             android:name=".MainActivity"
             android:configChanges="uiMode" />
 
-        <receiver android:name=".feature.note.receiver.NoteAlarmReceiver"
+        <receiver
+            android:name=".feature.note.receiver.NoteAlarmReceiver"
             android:enabled="true"
-            android:exported="false"/>
-
-        <receiver android:name=".feature.task.receiver.TaskAlarmReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".feature.task.receiver.TaskAlarmReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>

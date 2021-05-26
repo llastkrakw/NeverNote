@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.databinding.FragmentNoteBinding
+import com.llastkrakw.nevernote.feature.note.adapters.AddFolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.FolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
@@ -69,12 +70,14 @@ class NoteFragment : Fragment() {
             recyclerView = noteRecycler
             recyclerView.adapter = noteAdapter
 
-            noteViewModel.allNotesAsc.observe(viewLifecycleOwner, Observer { notes ->
+            noteViewModel.allNotesAscWithFolders.observe(viewLifecycleOwner, Observer { notes ->
                 notes?.let { noteAdapter.submitList(it) }
             })
 
             noteViewModel.allFolderWithNotes.observe(viewLifecycleOwner, Observer { folders ->
-                folders?.let { folderAdapter.submitList(it) }
+                folders?.let {
+                    folderAdapter.submitList(it)
+                }
             })
 
             noteViewModel.isGrid.observe(viewLifecycleOwner, Observer { isGrid ->

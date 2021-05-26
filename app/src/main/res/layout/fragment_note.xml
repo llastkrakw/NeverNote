@@ -7,73 +7,79 @@
             name="viewModel"
             type="com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel" />
     </data>
-    <FrameLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".views.notes.fragments.NoteFragment">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <FrameLayout
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:context=".views.notes.fragments.NoteFragment">
 
-            <TextView
-                android:id="@+id/search_note"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Theme.NeverNote.Button.Search"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/search_notes"
-                android:textAlignment="viewStart"
-                android:layout_marginBottom="10dp"/>
-
-            <LinearLayout
-                android:id="@+id/header_note"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_note"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="10dp">
+                android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/note_item_count"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/search_note"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/items(viewModel.allNotesAsc.size)}"
-                    android:background="@drawable/button_search_bg_light"
-                    android:padding="12dp"
-                    android:layout_marginEnd="15dp"/>
+                    style="@style/Theme.NeverNote.Button.Search"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/search_notes"
+                    android:textAlignment="viewStart"
+                    android:layout_marginBottom="10dp"/>
 
-                <TextView
-                    android:id="@+id/note_toggle"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/header_note"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/see_folders"
-                    android:background="@drawable/button_search_bg_light"
-                    android:padding="12dp"
-                    app:drawableStartCompat="@drawable/ic_documents_folder"
-                    android:drawablePadding="10dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/search_note"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/note_item_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/items(viewModel.allNotesAsc.size)}"
+                        android:background="@drawable/button_search_bg_light"
+                        android:padding="12dp"
+                        android:layout_marginEnd="15dp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/note_recycler"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/header_note"
-                tools:listitem="@layout/note_item"
-                android:layout_marginTop="10dp"
-                />
+                    <TextView
+                        android:id="@+id/note_toggle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/see_folders"
+                        android:background="@drawable/button_search_bg_light"
+                        android:padding="12dp"
+                        app:drawableStartCompat="@drawable/ic_documents_folder"
+                        android:drawablePadding="10dp"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
 
-    </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/note_recycler"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/header_note"
+                    tools:listitem="@layout/note_item"
+                    android:layout_marginTop="10dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

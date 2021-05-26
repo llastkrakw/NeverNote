@@ -15,7 +15,7 @@ import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.views.notes.activities.FolderDetailActivity
 import java.util.*
 
-class FolderAdapter(private val noteViewModel: NoteViewModel, private val owner: LifecycleOwner) : ListAdapter<FolderWithNotes, FolderAdapter.FolderViewHolder>(FoldersComparator()) {
+class AddFolderAdapter(private val noteViewModel: NoteViewModel, private val owner: LifecycleOwner) : ListAdapter<FolderWithNotes, AddFolderAdapter.FolderViewHolder>(FoldersComparator()) {
 
     companion object{
         const val EXTRA_FOLDER = "com.llastkrakw.nevernote.entitie.folder"
@@ -30,7 +30,7 @@ class FolderAdapter(private val noteViewModel: NoteViewModel, private val owner:
         holder.bind(currentFolder)
     }
 
-    class FolderViewHolder(itemView: View, noteViewModel: NoteViewModel, owner: LifecycleOwner) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class FolderViewHolder(itemView: View, private val noteViewModel: NoteViewModel, private val owner: LifecycleOwner) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         private val folderTitle: TextView = itemView.findViewById(R.id.folder_title)
         private lateinit var currentFolderWithNotes: FolderWithNotes
@@ -45,15 +45,13 @@ class FolderAdapter(private val noteViewModel: NoteViewModel, private val owner:
         companion object {
             fun create(parent: ViewGroup, noteViewModel: NoteViewModel, owner: LifecycleOwner): FolderViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.folder_item, parent, false)
+                    .inflate(R.layout.folder_item_bs, parent, false)
                 return FolderViewHolder(view, noteViewModel, owner)
             }
         }
 
         override fun onClick(v: View?) {
-            val intentDetail = Intent(v?.context, FolderDetailActivity::class.java)
-            intentDetail.putExtra(EXTRA_FOLDER, currentFolderWithNotes)
-            v?.context?.startActivity(intentDetail)
+            noteViewModel.addNotesToFolder(currentFolderWithNotes)
         }
 
     }

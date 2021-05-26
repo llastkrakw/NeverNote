@@ -1,6 +1,7 @@
 package com.llastkrakw.nevernote.views.task.fragments
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -16,12 +17,18 @@ import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModelFactory
+import com.llastkrakw.nevernote.views.task.activities.TaskCalendarView
 import java.util.*
 
 class AddTaskFragment : DialogFragment() {
 
     private val taskViewModel : TaskViewModel by viewModels {
         TaskViewModelFactory((activity?.application as NeverNoteApplication).taskRepository, activity?.application as NeverNoteApplication)
+    }
+
+    companion object{
+        const val TASK_CONTENT_REMINDER = "com.llastkrakw.nevernote.task.reminder"
+        const val TASK_DIALOG_REMINDER = 15
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -41,7 +48,11 @@ class AddTaskFragment : DialogFragment() {
         reminderButton.setOnClickListener {
             editText.text?.let { str ->
                 if (str.toString().isNotEmpty()){
-                    activity?.supportFragmentManager?.let { manager -> TaskTimerPickerFragment(taskViewModel, str.toString(), alertDialog).show(manager, "Task reminder") }
+                    //activity?.supportFragmentManager?.let { manager -> TaskTimerPickerFragment(taskViewModel, str.toString(), alertDialog).show(manager, "Task reminder") }
+                    val reminderIntent = Intent(context, TaskCalendarView::class.java)
+                    reminderIntent.putExtra(TASK_CONTENT_REMINDER, str.toString())
+                    startActivity(reminderIntent)
+                    alertDialog.cancel()
                 }
             }
         }

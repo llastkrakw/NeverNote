@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_EXTRA
@@ -19,7 +20,7 @@ class NoteNotificationUtils {
         @JvmStatic
         fun NotificationManager.sendNotification(applicationContext: Context, note : NoteWithFolders){
 
-             val notificationId = note.note.noteId
+            val notificationId = note.note.noteId
 
             val contentIntent = Intent(applicationContext, NoteDetailActivity::class.java)
             contentIntent.putExtra(NOTIFICATION_NOTE_EXTRA, note)
@@ -46,6 +47,7 @@ class NoteNotificationUtils {
 
 
             if (notificationId != null) {
+                Log.d("notification", "$notificationId")
                 builder.priority = NotificationCompat.PRIORITY_HIGH
                 notify(notificationId, builder.build())
             }

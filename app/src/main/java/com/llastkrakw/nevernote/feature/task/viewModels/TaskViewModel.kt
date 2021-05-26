@@ -62,12 +62,14 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
 
         notifyIntent.putExtra(NOTIFICATION_TASK_EXTRA, bytes)
 
-        val notifyPendingIntent = PendingIntent.getBroadcast(
+        val notifyPendingIntent = task.taskId?.let {
+            PendingIntent.getBroadcast(
                 app,
-                NOTIFICATION_TASK_REQUEST_CODE,
+                it.toInt(),
                 notifyIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
-        )
+            )
+        }
 
 /*        val notificationManager = ContextCompat.getSystemService(
                 app,
@@ -75,12 +77,14 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
         ) as NotificationManager
         notificationManager.sendNotification(app, note)*/
 
-        AlarmManagerCompat.setExactAndAllowWhileIdle(
+        if (notifyPendingIntent != null) {
+            AlarmManagerCompat.setAlarmClock(
                 alarmManager,
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 selectedTime,
+                notifyPendingIntent,
                 notifyPendingIntent
-        )
+            )
+        }
     }
 
 

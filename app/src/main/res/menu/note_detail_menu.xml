@@ -26,10 +26,6 @@
         android:enabled="true"
         android:title="@string/reminder" />
 
-    <item
-        android:id="@+id/action_add_to_folder"
-        android:enabled="true"
-        android:title="@string/add_to_folder" />
 
     <item
         android:id="@+id/action_to_screen"

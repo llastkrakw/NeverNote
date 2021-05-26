@@ -19,8 +19,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         // Consult the README on instructions for setting up Unsplash API key
-        buildConfigField "String", "UNSPLASH_ACCESS_KEY", "\"my_unsplah_acces_key\""
-        buildConfigField "String", "UNSPLASH_SECRET_KEY", "\"my_unsplah_secret_key\""
+        buildConfigField "String", "UNSPLASH_ACCESS_KEY", "\"BUNQPKSi3tX-Lx9VI-7DPfQEViHr37H6w-hI7BRa4Hs\""
+        buildConfigField "String", "UNSPLASH_SECRET_KEY", "\"GFoh3eNM7EmJSOWVgwNFpTHkcxUkwACeIl4iU274gLo\""
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -85,8 +85,15 @@ dependencies {
     implementation "com.github.dhaval2404:colorpicker:$rootProject.colorPicker"
 
     // Photo picker
-    implementation 'com.unsplash.pickerandroid:photopicker:1.0.0'
+    //implementation 'com.unsplash.pickerandroid:photopicker:1.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.SimformSolutionsPvtLtd:SSImagePicker:1.6'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    //Calendar
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    implementation 'com.github.kizitonwose:CalendarView:1.0.4'
 
     // Testing
     testImplementation "junit:junit:$rootProject.junitVersion"

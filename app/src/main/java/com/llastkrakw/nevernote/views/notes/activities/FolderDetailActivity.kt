@@ -12,6 +12,7 @@ import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.databinding.ActivityFolderDetailBinding
 import com.llastkrakw.nevernote.feature.note.adapters.FolderAdapter.Companion.EXTRA_FOLDER
 import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
+import com.llastkrakw.nevernote.feature.note.adapters.OtherNoteAdapter
 import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
@@ -26,7 +27,7 @@ class FolderDetailActivity : AppCompatActivity() {
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
-    private lateinit var  noteAdapter : NoteAdapter
+    private lateinit var  noteAdapter : OtherNoteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -36,7 +37,7 @@ class FolderDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         folderWithNotes = intent?.getParcelableExtra(EXTRA_FOLDER)
-        noteAdapter = NoteAdapter(noteViewModel, this)
+        noteAdapter = OtherNoteAdapter(noteViewModel, this)
 
         setSupportActionBar(binding.myToolbar)
         supportActionBar?.let {

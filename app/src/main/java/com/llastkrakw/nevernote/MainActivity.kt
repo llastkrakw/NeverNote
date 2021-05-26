@@ -11,20 +11,24 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.llastkrakw.nevernote.core.constants.IS_NOTIFICATION_TASK_EXTRA
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getLocationOnScreen
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.setTextViewDrawableColor
 import com.llastkrakw.nevernote.databinding.ActivityMainBinding
+import com.llastkrakw.nevernote.feature.note.adapters.AddFolderAdapter
 import com.llastkrakw.nevernote.feature.note.datas.entities.Folder
-import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.datas.entities.Note
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
@@ -47,9 +51,16 @@ class MainActivity : AppCompatActivity() {
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
+    private lateinit var addFolderAdapter : AddFolderAdapter
+    private lateinit var folderRecyclerView: RecyclerView
+
     companion object{
         const val ADD_NOTE_REQUEST_CODE = 10
     }
+
+    private lateinit var layoutBottomSheet: LinearLayout
+
+    private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -107,6 +118,27 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
+            addFolderAdapter = AddFolderAdapter(noteViewModel, this@MainActivity)
+
+            folderRecyclerView = addFolderBottomSheet.recyclerFolder
+            folderRecyclerView.adapter = addFolderAdapter
+            folderRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, true)
+
+            noteViewModel.allFolderWithNotes.observe(this@MainActivity,{ folders ->
+                folders?.let {
+                    addFolderAdapter.submitList(it)
+                }
+            })
+
+            addFolderBottomSheet.addFolderButton.setOnClickListener {
+                showAddFolderDialog()
+            }
+
+            layoutBottomSheet = addFolderBottomSheet.folderBottomSheet
+            sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet)
+            sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
         }
     }
 
@@ -147,7 +179,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.action_folder_note ->{
-            showFolderDialog()
+            toggleBottomSheet()
             true
         }
 
@@ -156,32 +188,6 @@ class MainActivity : AppCompatActivity() {
             // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun showFolderDialog(){
-        val items : List<FolderWithNotes>? = noteViewModel.allFolderWithNotes.value
-        val itemsString = items?.map { item -> item.folder.folderName }?.toTypedArray()
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setItems(itemsString,
-                DialogInterface.OnClickListener { _, selected ->
-                    items?.forEach {
-                        if (itemsString?.get(selected) == it.folder.folderName)
-                            noteViewModel.addNotesToFolder(it)
-                    }
-                })
-
-        val dialog: AlertDialog = builder.create()
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val wmlp: WindowManager.LayoutParams = dialog.window!!.attributes
-
-        wmlp.gravity = Gravity.TOP or Gravity.END
-        wmlp.x = 100 //x position
-
-        wmlp.y = 100 //y position
-
-
-        dialog.show()
-        dialog.window!!.setLayout(650, 550);
     }
 
 
@@ -309,15 +315,7 @@ class MainActivity : AppCompatActivity() {
                 }
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
-                if (position == 0) {
-                    binding.actionTask.setTextColor(getColor(R.color.hidden_text))
-                    binding.actionNote.setTextColor(getColor(R.color.white))
-                    setTextViewDrawableColor(binding.actionNote, R.color.white)
-                } else {
-                    binding.actionTask.setTextColor(getColor(R.color.white))
-                    binding.actionNote.setTextColor(getColor(R.color.hidden_text))
-                    setTextViewDrawableColor(binding.actionNote, R.color.hidden_text)
-                }
+
             } // Night mode is active, we're using dark theme
         }
     }
@@ -334,6 +332,14 @@ class MainActivity : AppCompatActivity() {
             Configuration.UI_MODE_NIGHT_YES -> {
                 isDark = Configuration.UI_MODE_NIGHT_YES
             } // Night mode is active, we're using dark theme
+        }
+    }
+
+    private fun toggleBottomSheet() {
+        if (sheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+        } else {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
         }
     }
 }
