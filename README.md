@@ -5,7 +5,7 @@
 
 ***Try latest NeverNote app from below 👇***
 
-[***NeverNote APK***](https://github.com/llastkrakw/NeverNote/blob/master/NeverNote.apk)
+<!-- [***NeverNote APK***](https://github.com/llastkrakw/NeverNote/blob/master/NeverNote.apk) -->
 
 Getting Started
 ---------------
