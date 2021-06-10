@@ -4,6 +4,11 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini
     environment:
+      vars:
+        FCI_KEYSTORE_PATH: /tmp/keystore.keystore
+        FCI_KEYSTORE_PASSWORD: Encrypted(Z0FBQUFBQmd3WldRSzNPQ3hLVmR2TVctQkUzVFVEc2ZlZ0QtYjliVDB1WFV6RG85MUN2Q2NDQXA1YXg4ajZrRTN1N1drMHFSZkFZa1daQW5KeU1HOFJwU0I1ZE9FX2pXaFE9PQ==)
+        FCI_KEY_PASSWORD: Encrypted(...) # PUT THE ENCRYPTED KEYSTORE ALIAS PASSWORD HERE
+        FCI_KEY_ALIAS: Encrypted(...) #PUT THE ENCRYPTED KEYSTORE USERNAME HERE
       node: latest
     triggering:
       events:
