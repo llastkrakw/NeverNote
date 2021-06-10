@@ -10,17 +10,19 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
+    def appVersionCode = Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
+
     defaultConfig {
         applicationId "com.llastkrakw.nevernote"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 1
+        versionCode appVersionCode
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
 
         // Consult the README on instructions for setting up Unsplash API key
-        buildConfigField "String", "UNSPLASH_ACCESS_KEY", "\"BUNQPKSi3tX-Lx9VI-7DPfQEViHr37H6w-hI7BRa4Hs\""
-        buildConfigField "String", "UNSPLASH_SECRET_KEY", "\"GFoh3eNM7EmJSOWVgwNFpTHkcxUkwACeIl4iU274gLo\""
+        buildConfigField "String", "UNSPLASH_ACCESS_KEY", "\"acces_key\""
+        buildConfigField "String", "UNSPLASH_SECRET_KEY", "\"secret_key\""
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
