@@ -31,7 +31,9 @@ workflows:
           keyPassword=$FCI_KEY_PASSWORD
           keyAlias=$FCI_KEY_ALIAS
           storeFile=$FCI_KEYSTORE_PATH
-          EOF          
+          EOF
+      - name: Make gradlew executable
+        script: chmod +x ./gradlew          
       - name: Build Android debug app
         script: ./gradlew assembleDebug
     artifacts:
