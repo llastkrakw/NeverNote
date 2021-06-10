@@ -10,7 +10,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
-    def appVersionCode = Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
+    def appVersionCode = Integer.valueOf(System.env.BUILD_NUMBER ?: 1)
 
     defaultConfig {
         applicationId "com.llastkrakw.nevernote"
