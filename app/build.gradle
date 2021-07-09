@@ -33,10 +33,10 @@ android {
         keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
     }
 
+
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
