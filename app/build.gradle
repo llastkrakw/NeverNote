@@ -116,6 +116,14 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation 'com.github.kizitonwose:CalendarView:1.0.4'
 
+    //Audio recorder
+    implementation 'com.github.Armen101:AudioRecordView:1.0.5'
+    implementation 'com.chibde:audiovisualizer:2.2.0'
+
+
+    //EventBus
+    implementation 'org.greenrobot:eventbus:3.2.0'
+
     // Testing
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"

@@ -48,5 +48,18 @@
             android:layout_marginTop="10dp"
             />
 
+<!--        <TextView
+            android:id="@+id/nothing_to_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/primaryColor"
+            android:text="@string/nothing_to_show_there"
+            app:drawableTopCompat="@drawable/ic_yellow_document"
+            android:layout_marginTop="50dp"
+            android:visibility="gone"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

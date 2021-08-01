@@ -38,4 +38,21 @@
     <string name="add_content_of_task">Add content of task</string>
     <string name="add_reminder">Add Reminder</string>
     <string name="done">Done</string>
+    <string name="record_timer_text">00:00</string>
+    <string name="toggle_record">toggle record</string>
+    <string name="finish">Finish</string>
+    <string name="m4a">m4a</string>
+    <string name="mp3">mp3</string>
+    <string name="an_error_occurred">And error occurred</string>
+    <string name="unknown_error_occurred">unknown error occurred</string>
+    <string name="recording_saved_successfully">recording saved successfully</string>
+    <string name="record_title">record title</string>
+    <string name="audio">audio</string>
+    <string name="modify_text">Modify text</string>
+    <string name="add_note_background">Add note Background</string>
+    <string name="add_color">Add Color</string>
+    <string name="add_audio">Add audio</string>
+    <string name="add_shape">Add shape</string>
+    <string name="add_new_folder">Add new folder</string>
+    <string name="nothing_to_show_there">Nothing to show there !</string>
 </resources>

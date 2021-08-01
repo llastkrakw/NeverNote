@@ -2,39 +2,32 @@ package com.llastkrakw.nevernote.feature.note.adapters
 
 import android.content.Intent
 import android.content.res.TypedArray
-import android.graphics.drawable.Drawable
-import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.MAX_CONTENT
 import com.llastkrakw.nevernote.core.constants.MAX_TITLE
-import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
-import com.llastkrakw.nevernote.feature.note.datas.entities.Note
 import com.llastkrakw.nevernote.core.utilities.FormatUtils.Companion.toSimpleString
-import com.llastkrakw.nevernote.core.utilities.ViewUtils
-import com.llastkrakw.nevernote.core.utilities.picassoLoader
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
+import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
+import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.views.notes.activities.NoteDetailActivity
-import kotlinx.coroutines.launch
 import java.util.*
 
 
-class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: LifecycleOwner) : ListAdapter<NoteWithFolders, NoteAdapter.NoteViewHolder>(NotesComparator()) {
+class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: LifecycleOwner) : ListAdapter<NoteWithFoldersAndRecords, NoteAdapter.NoteViewHolder>(NotesComparator()) {
 
     companion object{
         const val NOTE_EXTRA = "com.llastkrakw.nevernote.note.adapter"
@@ -52,19 +45,20 @@ class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: L
     class NoteViewHolder(itemView: View, private val noteViewModel: NoteViewModel, private val owner: LifecycleOwner)
         : RecyclerView.ViewHolder(itemView), View.OnLongClickListener, View.OnClickListener{
 
-        private lateinit var  currentNote : NoteWithFolders
+        private lateinit var  currentNote : NoteWithFoldersAndRecords
         private var colors: TypedArray = itemView.resources.obtainTypedArray(R.array.random_color)
         var color = colors.getColor(Random().nextInt(8), 0)
 
         private val noteCard: CardView = itemView.findViewById(R.id.note_card)
 
-
         private val noteTitle: TextView = itemView.findViewById(R.id.note_title)
         private val noteContent: TextView = itemView.findViewById(R.id.note_content)
         private val noteDate: TextView = itemView.findViewById(R.id.note_date)
         private val check: ImageView = itemView.findViewById(R.id.isChecked)
+        private val haveAudio: ImageButton = itemView.findViewById(R.id.have_audio)
+        private val haveClock: ImageButton = itemView.findViewById(R.id.have_clock)
 
-        fun bind(note: NoteWithFolders) {
+        fun bind(note: NoteWithFoldersAndRecords) {
             currentNote = note
             val title = toSpannable(note.note.noteTitle)
             val content = toSpannable(note.note.noteContent)
@@ -85,37 +79,17 @@ class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: L
             noteCard.setCardBackgroundColor(color)
             noteDate.text = toSimpleString(date)
 
-            if (!note.note.noteBg.isNullOrEmpty()){
-                Glide
-                    .with(noteCard.context)
-                    .load(Uri.parse(note.note.noteBg))
-                    .into(object : CustomTarget<Drawable>(){
-                        override fun onResourceReady(
-                            resource: Drawable,
-                            transition: Transition<in Drawable>?
-                        ) {
-                            if(noteCard.width > 0 && noteCard.height > 0){
-                                noteCard.background = ViewUtils.resize(
-                                    resource,
-                                    noteCard.width,
-                                    noteCard.height,
-                                    noteCard.context
-                                )
-                            }
-                        }
-
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                        }
-
-                    })
-            }
+            haveAudio.visibility = if(note.recordsRef.isNotEmpty()) View.VISIBLE else View.GONE
+            haveClock.visibility = if(note.note.noteReminder != null) View.VISIBLE else View.GONE
 
             itemView.setOnLongClickListener(this)
             itemView.setOnClickListener(this)
 
-            noteViewModel.isCleared.observe(owner,  {
-                if (it)
+            noteViewModel.selectedNotes.observe(owner,  {
+                if (it.isEmpty())
                     check.visibility = View.GONE
+                else if (it.contains(note.note))
+                    check.visibility = View.VISIBLE
             })
         }
 
@@ -128,7 +102,6 @@ class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: L
                 return NoteViewHolder(view, noteViewModel, owner)
             }
         }
-
 
         override fun onLongClick(v: View?): Boolean {
             if (v != null) {
@@ -154,7 +127,6 @@ class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: L
             val intentDetail = Intent(v?.context, NoteDetailActivity::class.java)
 
             noteViewModel.selectedNotes.observe(owner, {
-
                 if(it.isNotEmpty()){
                     Log.d("multi", it.toString())
                     if(it.contains(currentNote.note)){
@@ -179,14 +151,14 @@ class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: L
     }
 
 
-    class NotesComparator : DiffUtil.ItemCallback<NoteWithFolders>() {
-        override fun areItemsTheSame(oldItem: NoteWithFolders, newItem: NoteWithFolders): Boolean {
+    class NotesComparator : DiffUtil.ItemCallback<NoteWithFoldersAndRecords>() {
+        override fun areItemsTheSame(oldItem: NoteWithFoldersAndRecords, newItem: NoteWithFoldersAndRecords): Boolean {
             return oldItem.note.noteId == newItem.note.noteId
         }
 
         override fun areContentsTheSame(
-            oldItem: NoteWithFolders,
-            newItem: NoteWithFolders
+            oldItem: NoteWithFoldersAndRecords,
+            newItem: NoteWithFoldersAndRecords
         ): Boolean {
             return oldItem.note.noteContent == newItem.note.noteContent
         }
@@ -196,16 +168,18 @@ class NoteAdapter(private val noteViewModel: NoteViewModel, private val owner: L
 
 
 
-    fun performFiltering(constraint: CharSequence?, completeList : List<NoteWithFolders>){
+    fun performFiltering(constraint: CharSequence?, completeList : List<NoteWithFoldersAndRecords>){
 
-        val filteredList = mutableListOf<NoteWithFolders>()
+        val filteredList = mutableListOf<NoteWithFoldersAndRecords>()
 
         if (constraint == null || constraint.isEmpty()) {
             submitList(completeList)
         }
         else {
             for (item in completeList) {
-                if (item.note.noteContent.toLowerCase(Locale.ROOT).contains(constraint.toString().toLowerCase(Locale.ROOT)) || item.note.noteTitle.toLowerCase(Locale.ROOT).contains(constraint.toString().toLowerCase(Locale.ROOT))) {
+                if (item.note.noteContent.lowercase(Locale.ROOT).contains(constraint.toString()
+                        .lowercase(Locale.ROOT)) || item.note.noteTitle.lowercase(Locale.ROOT)
+                        .contains(constraint.toString().lowercase(Locale.ROOT))) {
                     filteredList.add(item)
                 }
             }

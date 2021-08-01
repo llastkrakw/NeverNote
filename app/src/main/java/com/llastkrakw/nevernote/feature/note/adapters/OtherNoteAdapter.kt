@@ -2,35 +2,26 @@ package com.llastkrakw.nevernote.feature.note.adapters
 
 import android.content.Intent
 import android.content.res.TypedArray
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.MAX_CONTENT
 import com.llastkrakw.nevernote.core.constants.MAX_TITLE
+import com.llastkrakw.nevernote.core.utilities.FormatUtils.Companion.toSimpleString
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
 import com.llastkrakw.nevernote.feature.note.datas.entities.Note
-import com.llastkrakw.nevernote.core.utilities.FormatUtils.Companion.toSimpleString
-import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.resize
-import com.llastkrakw.nevernote.core.utilities.picassoLoader
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.views.notes.activities.NoteDetailActivity
-import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -63,6 +54,8 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
         private val noteContent: TextView = itemView.findViewById(R.id.note_content)
         private val noteDate: TextView = itemView.findViewById(R.id.note_date)
         private val check: ImageView = itemView.findViewById(R.id.isChecked)
+        private val haveAudio: ImageButton = itemView.findViewById(R.id.have_audio)
+        private val haveClock: ImageButton = itemView.findViewById(R.id.have_clock)
 
         fun bind(note: Note) {
             currentNote = note
@@ -85,29 +78,14 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
             noteCard.setCardBackgroundColor(color)
             noteDate.text = toSimpleString(date)
 
-            if (!currentNote.noteBg.isNullOrEmpty()){
-                Glide
-                    .with(noteCard.context)
-                    .load(Uri.parse(currentNote.noteBg))
-                    .into(object : CustomTarget<Drawable>(){
-                        override fun onResourceReady(
-                            resource: Drawable,
-                            transition: Transition<in Drawable>?
-                        ) {
-                            noteCard.background = resize(resource, noteCard.measuredWidth, noteCard.height, noteCard.context)
-                        }
-
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                        }
-
-                    })
-            }
+            //haveAudio.visibility = if(note.recordsRef.isNotEmpty()) View.VISIBLE else View.GONE
+            haveClock.visibility = if(note.noteReminder != null) View.VISIBLE else View.GONE
 
             itemView.setOnLongClickListener(this)
             itemView.setOnClickListener(this)
 
-            noteViewModel.isCleared.observe(owner,  {
-                if (it)
+            noteViewModel.selectedNotes.observe(owner,  {
+                if (it.isEmpty())
                     check.visibility = View.GONE
             })
         }

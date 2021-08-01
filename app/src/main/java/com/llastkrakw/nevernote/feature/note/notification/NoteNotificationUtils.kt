@@ -9,8 +9,7 @@ import androidx.core.app.NotificationCompat
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_EXTRA
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
-import com.llastkrakw.nevernote.feature.note.datas.entities.Note
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
+import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
 import com.llastkrakw.nevernote.views.notes.activities.NoteDetailActivity
 
 class NoteNotificationUtils {
@@ -18,7 +17,7 @@ class NoteNotificationUtils {
     companion object{
 
         @JvmStatic
-        fun NotificationManager.sendNotification(applicationContext: Context, note : NoteWithFolders){
+        fun NotificationManager.sendNotification(applicationContext: Context, note : NoteWithFoldersAndRecords){
 
             val notificationId = note.note.noteId
 

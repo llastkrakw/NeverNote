@@ -1,13 +1,11 @@
 package com.llastkrakw.nevernote.feature.note.datas.entities
 
 import android.os.Parcelable
-import android.text.SpannableString
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.llastkrakw.nevernote.core.constants.*
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 import java.util.*
 
 @Entity(tableName = TABLE_NOTE)

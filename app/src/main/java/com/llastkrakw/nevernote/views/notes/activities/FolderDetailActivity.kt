@@ -1,17 +1,17 @@
 package com.llastkrakw.nevernote.views.notes.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.databinding.ActivityFolderDetailBinding
 import com.llastkrakw.nevernote.feature.note.adapters.FolderAdapter.Companion.EXTRA_FOLDER
-import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.OtherNoteAdapter
 import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
@@ -23,7 +23,7 @@ class FolderDetailActivity : AppCompatActivity() {
     private lateinit var binding : ActivityFolderDetailBinding
     private var folderWithNotes: FolderWithNotes? = null
 
-    private val noteViewModel : NoteViewModel by viewModels(){
+    private val noteViewModel : NoteViewModel by viewModels {
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
@@ -68,6 +68,8 @@ class FolderDetailActivity : AppCompatActivity() {
                 noteRecycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
                 noteAdapter.submitList(it.notes)
+
+                nothingToShow.visibility = if(it.notes.isNotEmpty()) View.GONE else View.VISIBLE
 
             }
 

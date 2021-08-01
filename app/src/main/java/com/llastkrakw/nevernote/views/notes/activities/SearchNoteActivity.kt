@@ -1,15 +1,15 @@
 package com.llastkrakw.nevernote.views.notes.activities
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
+import android.view.View
 import android.widget.EditText
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
@@ -21,7 +21,7 @@ import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 class SearchNoteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchNoteBinding
-    private val noteViewModel : NoteViewModel by viewModels(){
+    private val noteViewModel : NoteViewModel by viewModels {
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
@@ -44,7 +44,7 @@ class SearchNoteActivity : AppCompatActivity() {
             noteRecycler.adapter = noteAdapter
             noteRecycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-            noteViewModel.allNotesAscWithFolders.observe(this@SearchNoteActivity, Observer { notes ->
+            noteViewModel.allNotesAscWithFolders.observe(this@SearchNoteActivity, { notes ->
                 notes?.let { noteAdapter.submitList(it) }
             })
 
@@ -62,7 +62,9 @@ class SearchNoteActivity : AppCompatActivity() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    noteViewModel.allNotesAscWithFolders.value?.let { noteAdapter.performFiltering(s, it) }
+                    noteViewModel.allNotesAscWithFolders.value?.let {
+                        noteAdapter.performFiltering(s, it)
+                    }
                 }
 
             })

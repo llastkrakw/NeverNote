@@ -15,20 +15,23 @@ import com.llastkrakw.nevernote.core.converters.NoteConverter
 import com.llastkrakw.nevernote.feature.note.datas.dao.CrossRefDao
 import com.llastkrakw.nevernote.feature.note.datas.dao.FolderDao
 import com.llastkrakw.nevernote.feature.note.datas.dao.NoteDao
+import com.llastkrakw.nevernote.feature.note.datas.dao.RecordRefDao
 import com.llastkrakw.nevernote.feature.note.datas.entities.Folder
 import com.llastkrakw.nevernote.feature.note.datas.entities.FolderNoteCrossRef
 import com.llastkrakw.nevernote.feature.note.datas.entities.Note
+import com.llastkrakw.nevernote.feature.note.datas.entities.RecordRef
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-@Database(entities = [Note::class, Folder::class, FolderNoteCrossRef::class], version = 1, exportSchema = false)
+@Database(entities = [Note::class, Folder::class, FolderNoteCrossRef::class, RecordRef::class], version = 1, exportSchema = false)
 @TypeConverters(NoteConverter::class, DateConverter::class)
 abstract class NoteRoomDatabase : RoomDatabase() {
 
     abstract fun noteDao() : NoteDao
     abstract fun folderDao() : FolderDao
     abstract fun crossRefDao() : CrossRefDao
+    abstract fun recordRefDao() : RecordRefDao
 
     companion object{
 

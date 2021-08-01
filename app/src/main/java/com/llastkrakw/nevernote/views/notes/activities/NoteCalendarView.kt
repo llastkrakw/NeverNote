@@ -21,7 +21,7 @@ import com.llastkrakw.nevernote.databinding.ActivityNoteCalendarViewBinding
 import com.llastkrakw.nevernote.databinding.CalendarDayLayoutBinding
 import com.llastkrakw.nevernote.databinding.CalendarMonthHeaderLayoutBinding
 import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
+import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import com.llastkrakw.nevernote.views.notes.fragments.NoteTimePickerFragment
@@ -39,7 +39,7 @@ class NoteCalendarView : AppCompatActivity() {
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
-    private var noteWithFolders : NoteWithFolders? = null
+    private var noteWithFolders : NoteWithFoldersAndRecords? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {

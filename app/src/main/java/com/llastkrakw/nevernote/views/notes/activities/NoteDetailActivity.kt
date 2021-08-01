@@ -2,10 +2,7 @@ package com.llastkrakw.nevernote.views.notes.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
@@ -18,7 +15,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.toDrawable
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.imagepickerlibrary.ImagePickerActivityClass
 import com.app.imagepickerlibrary.ImagePickerBottomsheet
 import com.app.imagepickerlibrary.bottomSheetActionCamera
@@ -36,7 +33,10 @@ import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getWorstContr
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.resize
 import com.llastkrakw.nevernote.databinding.ActivityNoteDetailBinding
 import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter.Companion.NOTE_EXTRA
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
+import com.llastkrakw.nevernote.feature.note.adapters.RecordAdapter
+import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
+import com.llastkrakw.nevernote.feature.note.datas.entities.RecordRef
+import com.llastkrakw.nevernote.feature.note.datas.entities.Recording
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import kotlinx.coroutines.*
@@ -47,27 +47,28 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
 
     private val scope = MainScope()
     private lateinit var binding: ActivityNoteDetailBinding
-    private var noteWithFolders : NoteWithFolders? = null
+    private var noteWithFolders : NoteWithFoldersAndRecords? = null
     private val noteViewModel : NoteViewModel by viewModels{
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
     companion object{
         const val NOTE_UPDATE_EXTRA = "com.llastkrakw.nevernote.notes.update"
-        const val UPDATE_NOTE_REQUEST_CODE = 40;
+        const val UPDATE_NOTE_REQUEST_CODE = 40
     }
 
 
     private val imagePickerFragment = ImagePickerBottomsheet()
     private lateinit var imagePicker : ImagePickerActivityClass
 
+    private var recordAdapter : RecordAdapter = RecordAdapter()
 
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         imagePicker.onActivityResult(requestCode, resultCode, data)
         if(requestCode == UPDATE_NOTE_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            val newNote : NoteWithFolders? = data?.getParcelableExtra(NOTE_UPDATE_EXTRA)
+            val newNote : NoteWithFoldersAndRecords? = data?.getParcelableExtra(NOTE_UPDATE_EXTRA)
             if(newNote != null){
                 Log.d("note_update", newNote.note.noteId.toString())
                 setUi(binding, newNote)
@@ -81,7 +82,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
 
         binding = ActivityNoteDetailBinding.inflate(layoutInflater)
@@ -107,7 +108,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
             setUi(binding, noteWithFolders!!)
     }
 
-    private fun setUi(binding: ActivityNoteDetailBinding, noteWithFolders: NoteWithFolders){
+    private fun setUi(binding: ActivityNoteDetailBinding, noteWithFolders: NoteWithFoldersAndRecords){
 
         noteWithFolders.let { note ->
 
@@ -135,9 +136,42 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
                     }
                 }
 
+                haveClock.visibility = if(note.note.noteReminder != null) View.VISIBLE else View.GONE
+
+
+                recordRecycler.layoutManager = LinearLayoutManager(this@NoteDetailActivity)
+
+                noteViewModel.allRecordRef.observe(this@NoteDetailActivity, {
+                    recordAdapter.submitList(getRecordForNote(it))
+                })
+
+                recordRecycler.adapter = recordAdapter
+
             }
 
         }
+    }
+
+    private fun getRecordForNote(recordRefs: List<RecordRef>?): MutableList<Recording> {
+        val recordings = noteViewModel.getRecordings().toList()
+        val selectedRecords = mutableListOf<Recording>()
+
+        noteWithFolders?.note?.noteId.let { noteId ->
+
+            recordings.forEach {
+                recordRefs?.forEach{ recordRef ->
+                    Log.d("record size", noteId.toString())
+                    Log.d("record size", recordRef.recordForThisNoteId.toString())
+                    if(noteId == recordRef.recordForThisNoteId && it.title == recordRef.recordTitle){
+                        selectedRecords.add(it)
+                        Log.d("record size", it.title)
+                    }
+
+                }
+            }
+
+        }
+        return selectedRecords
     }
 
 
@@ -204,7 +238,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
             putExtra(Intent.EXTRA_TITLE, "Share note with NeverNote")
 
             // (Optional) Here we're passing a content URI to an image to be displayed
-            data = Uri.parse("android.resource://com.llastkrakw.nevernote/drawable/ic_logo");
+            data = Uri.parse("android.resource://com.llastkrakw.nevernote/drawable/ic_logo")
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             type= "text/plain"
         }, null)
@@ -212,7 +246,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
 
     }
 
-    private fun loadBg(noteWithFolders: NoteWithFolders){
+    private fun loadBg(noteWithFolders: NoteWithFoldersAndRecords){
         Glide
             .with(applicationContext)
             .load(Uri.parse(noteWithFolders.note.noteBg))
@@ -223,20 +257,25 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
                     transition: Transition<in Drawable>?
                 ) {
                     binding.root.background = resource
-                    val pixels = getPixels(resource)
-                    val textColor = Color.valueOf(binding.noteContent.currentTextColor)
-                    val pixelColor = Color.valueOf(getWorstContrastColorInImage(textColor, pixels))
-                    val optimalOpacity = findOptimalOverlayOpacity(textColor, pixelColor, Color.valueOf(Color.WHITE))
-                    //binding.root.overlay.add(ColorDrawable(Color.BLACK))
-                    binding.main.setBackgroundColor(Color.valueOf(255F, 255F, 255F, optimalOpacity.toFloat()).toArgb())
-                    Log.d("opacity optimal", optimalOpacity.toString())
-                    Log.d("opacity textColor", textColor.toString())
+                    correctContrast(resource)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
 
             })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun correctContrast(resource : Drawable){
+        val pixels = getPixels(resource)
+        val textColor = Color.valueOf(binding.noteContent.currentTextColor)
+        val pixelColor = Color.valueOf(getWorstContrastColorInImage(textColor, pixels))
+        val optimalOpacity = findOptimalOverlayOpacity(textColor, pixelColor, Color.valueOf(Color.WHITE))
+        //binding.root.overlay.add(ColorDrawable(Color.BLACK))
+        binding.main.setBackgroundColor(Color.valueOf(255F, 255F, 255F, optimalOpacity.toFloat()).toArgb())
+        Log.d("opacity optimal", optimalOpacity.toString())
+        Log.d("opacity textColor", textColor.toString())
     }
 
     override fun onItemClick(item: String?) {
@@ -251,19 +290,19 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
     }
 
     override fun returnString(item: Uri?) {
-        noteWithFolders?.let {
-            it.note.noteBg = item.toString()
-            noteViewModel.updateNote(it.note)
-        }
+        noteWithFolders?.note?.noteBg = item.toString()
+        noteWithFolders?.note?.let { noteViewModel.updateNote(it) }
         Glide
             .with(applicationContext)
             .load(item)
             .into(object : CustomTarget<Drawable>(){
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onResourceReady(
                     resource: Drawable,
                     transition: Transition<in Drawable>?
                 ) {
                     binding.root.background = resize(resource, binding.root.measuredWidth, binding.root.measuredHeight, this@NoteDetailActivity)
+                    correctContrast(resource)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {

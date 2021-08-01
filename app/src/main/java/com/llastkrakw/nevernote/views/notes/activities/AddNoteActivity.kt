@@ -1,10 +1,10 @@
 package com.llastkrakw.nevernote.views.notes.activities
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -16,36 +16,59 @@ import android.text.util.Linkify
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.animation.Transformation
+import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.toHtml
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.imagepickerlibrary.ImagePickerActivityClass
 import com.app.imagepickerlibrary.ImagePickerBottomsheet
 import com.app.imagepickerlibrary.bottomSheetActionCamera
 import com.app.imagepickerlibrary.bottomSheetActionGallary
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.extension.*
 import com.llastkrakw.nevernote.core.utilities.Editor
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
+import com.llastkrakw.nevernote.core.utilities.SwipeCallback
 import com.llastkrakw.nevernote.core.utilities.ViewUtils
 import com.llastkrakw.nevernote.databinding.ActivityAddNoteBinding
+import com.llastkrakw.nevernote.feature.note.adapters.RecordAdapter
 import com.llastkrakw.nevernote.feature.note.datas.entities.Note
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
+import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
+import com.llastkrakw.nevernote.feature.note.datas.entities.RecordRef
+import com.llastkrakw.nevernote.feature.note.datas.entities.Recording
+import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
+import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import com.llastkrakw.nevernote.views.notes.activities.NoteDetailActivity.Companion.NOTE_UPDATE_EXTRA
+import com.llastkrakw.nevernote.views.notes.fragments.RecordDialogFragment
+import com.llastkrakw.nevernote.views.notes.fragments.RecordDialogFragment.Companion.NOTE_ID_FOR_SERVICE
 import java.util.*
 
 
 class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickListener, ImagePickerActivityClass.OnResult {
+
+    private val requiredPermissions = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.RECORD_AUDIO
+    )
+
+    private val noteViewModel : NoteViewModel by viewModels{
+        NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
+    }
 
     private lateinit var binding: ActivityAddNoteBinding
     private lateinit var editor: Editor
@@ -64,16 +87,20 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
 
     }
 
+
     private var note : Note = Note(null, "", "", Date(), null, Date(), null)
-    private var noteForUpdate : NoteWithFolders? = null
+    private var noteId : Int? = null
+    private var noteForUpdate : NoteWithFoldersAndRecords? = null
 
     private val imagePickerFragment = ImagePickerBottomsheet()
     private lateinit var imagePicker : ImagePickerActivityClass
 
+    private var recordAdapter : RecordAdapter = RecordAdapter()
+
 
     companion object {
         // dummy request code to identify the request
-        private const val IMAGE_REQUEST_CODE = 123
+        //private const val IMAGE_REQUEST_CODE = 123
         const val EXTRA_NOTE = "com.llastkrakw.nevernote.new.note"
     }
 
@@ -98,6 +125,11 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        for (result in grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,10 +145,28 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             it.setDisplayShowHomeEnabled(true)
         }
 
+        when (intent?.action) {
+            Intent.ACTION_SEND -> {
+                if ("text/plain" == intent.type) {
+                    handleSendText(intent, binding) // Handle text being sent
+                }
+            }
+        }
+
         imagePicker = ImagePickerActivityClass(this, this, activityResultRegistry,activity = this)
         imagePicker.cropOptions(true)
 
         noteForUpdate = intent?.getParcelableExtra(NOTE_UPDATE_EXTRA)
+
+        if(noteForUpdate == null){
+            noteViewModel.insertNote(note)
+            noteViewModel.returnedIdWhenAdd.observe(this, {
+                noteId = it
+                note.noteId = it
+            })
+        }
+        else
+            noteId = noteForUpdate!!.note.noteId
 
 
         binding.apply {
@@ -139,7 +189,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                     editAction.setImageDrawable(
                         ContextCompat.getDrawable(
                             this@AddNoteActivity,
-                            R.drawable.ic_text_icon
+                            R.drawable.ic_sentence_case
                         )
                     )
                 }
@@ -160,6 +210,30 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
 
             enableStyle()
 
+            recordRecycler.layoutManager = LinearLayoutManager(this@AddNoteActivity)
+
+            noteViewModel.allRecordRef.observe(this@AddNoteActivity, {
+                recordAdapter.submitList(getRecordForNote(noteForUpdate, noteId!!, it))
+            })
+
+            recordRecycler.adapter = recordAdapter
+
+            val swipeCompleteCallback = object : SwipeCallback(this@AddNoteActivity){
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    noteViewModel.allRecordRef.observe(this@AddNoteActivity, {
+                        val position = viewHolder.absoluteAdapterPosition
+                        val recording = recordAdapter.currentList[position]
+                        it.forEach { recordRef ->
+                            if(recordRef.recordTitle == recording.title){
+                                noteViewModel.deleteRecordRef(recordRef)
+                            }
+                        }
+                    })
+                }
+            }
+
+            val itemTouch = ItemTouchHelper(swipeCompleteCallback)
+            itemTouch.attachToRecyclerView(recordRecycler)
         }
 
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
@@ -210,12 +284,20 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             }
 
             addLink.setOnClickListener {
-                editor.setUrl(
-                    editTextNoteContent.text.subSequence(
-                        editTextNoteContent.selectionStart,
-                        editTextNoteContent.selectionEnd
+                if (editTextNoteContent.selectionStart != editTextNoteContent.selectionEnd)
+                    editor.setUrl(
+                        editTextNoteContent.text.subSequence(
+                            editTextNoteContent.selectionStart,
+                            editTextNoteContent.selectionEnd
+                        )
                     )
-                )
+            }
+
+            addRecorder.setOnClickListener {
+                if (!permissionsIsGranted(requiredPermissions)) {
+                    ActivityCompat.requestPermissions(this@AddNoteActivity, requiredPermissions, 200)
+                }
+                showRecordDialog()
             }
 
         }
@@ -283,20 +365,16 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                 Log.d("note_update", "in add ${noteForUpdate!!.note.noteId}")
                 noteForUpdate!!.note.noteTitle = binding.editTextNoteTitle.text.toHtml()
                 noteForUpdate!!.note.noteContent = binding.editTextNoteContent.text.toHtml()
+                toast("note ${noteForUpdate!!.note.noteId}", Toast.LENGTH_LONG)
                 replyIntent.putExtra(NOTE_UPDATE_EXTRA, noteForUpdate)
                 setResult(Activity.RESULT_OK, replyIntent)
             }
             else{
-                if (TextUtils.isEmpty(binding.editTextNoteContent.text) && TextUtils.isEmpty(binding.editTextNoteTitle.text)) {
-                    setResult(Activity.RESULT_CANCELED, replyIntent)
-                }
-                else{
+                if (!(TextUtils.isEmpty(binding.editTextNoteContent.text) && TextUtils.isEmpty(binding.editTextNoteTitle.text))) {
                     note.noteTitle = binding.editTextNoteTitle.text.toHtml()
                     note.noteContent = binding.editTextNoteContent.text.toHtml()
-                    note.noteCreatedAt = Date()
-                    note.noteLastUpdate = Date()
-                    replyIntent.putExtra(EXTRA_NOTE, note)
-                    setResult(Activity.RESULT_OK, replyIntent)
+                    toast("note ${note.noteId}", Toast.LENGTH_LONG)
+                    noteViewModel.updateNote(note)
                 }
             }
             onBackPressed()
@@ -309,6 +387,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             super.onOptionsItemSelected(item)
         }
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -370,4 +449,71 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
 
             })
     }
+
+    private fun showRecordDialog(){
+
+        val dialogFragment = RecordDialogFragment()
+        val bundle = Bundle()
+
+        noteId?.let { bundle.putInt(NOTE_ID_FOR_SERVICE, it) }
+
+        dialogFragment.arguments = bundle
+        dialogFragment.show(supportFragmentManager, RecordDialogFragment.TAG)
+    }
+
+    private fun permissionsIsGranted(perms: Array<String>): Boolean {
+        for (perm in perms) {
+            val checkVal: Int = checkCallingOrSelfPermission(perm)
+            if (checkVal != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun getRecordForNote(noteForUpdate : NoteWithFoldersAndRecords?, noteId : Int, recordsRef: List<RecordRef>) : List<Recording> {
+
+        val recordings = noteViewModel.getRecordings().toList()
+        val selectedRecords = mutableListOf<Recording>()
+
+        Log.d("recording size", recordings.size.toString())
+
+        if (noteForUpdate != null)
+            Log.d("record ref size", noteForUpdate.recordsRef.size.toString())
+
+        recordings.forEach {
+            if (noteForUpdate == null){
+                recordsRef.forEach { recordRef ->
+                    if(noteId == recordRef.recordForThisNoteId && it.title == recordRef.recordTitle){
+                        Log.d("record size", noteId.toString())
+                        Log.d("record size", recordRef.recordForThisNoteId.toString())
+                        selectedRecords.add(it)
+                        Log.d("record size", it.title)
+                    }
+                }
+            }
+            else{
+                recordsRef.forEach{ recordRef ->
+                    Log.d("record size", noteId.toString())
+                    Log.d("record size", recordRef.recordForThisNoteId.toString())
+                    if(noteId == recordRef.recordForThisNoteId && it.title == recordRef.recordTitle){
+                        selectedRecords.add(it)
+                        Log.d("record size", it.title)
+                    }
+
+                }
+            }
+        }
+
+
+        Log.d("selected record size", selectedRecords.size.toString())
+        return selectedRecords.toList()
+    }
+
+    private fun handleSendText(intent: Intent, binding: ActivityAddNoteBinding) {
+        intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+           binding.editTextNoteContent.setText(it, TextView.BufferType.EDITABLE)
+        }
+    }
+
 }

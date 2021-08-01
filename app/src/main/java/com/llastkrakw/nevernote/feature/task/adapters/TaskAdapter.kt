@@ -9,12 +9,10 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.R
-import com.llastkrakw.nevernote.feature.note.datas.entities.Note
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import java.util.*
@@ -72,7 +70,8 @@ class TaskAdapter(private val taskViewModel: TaskViewModel, private val owner: L
         }
         else {
             for (item in completeList) {
-                if (item.taskContent.toLowerCase(Locale.ROOT).contains(constraint.toString().toLowerCase(Locale.ROOT))) {
+                if (item.taskContent.lowercase(Locale.ROOT).contains(constraint.toString()
+                        .lowercase(Locale.ROOT))) {
                     filteredList.add(item)
                 }
             }

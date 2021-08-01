@@ -7,13 +7,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
 import androidx.lifecycle.*
-import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_EXTRA
-import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_REQUEST_CODE
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_TASK_EXTRA
-import com.llastkrakw.nevernote.core.constants.NOTIFICATION_TASK_REQUEST_CODE
 import com.llastkrakw.nevernote.core.utilities.marshallParcelable
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
-import com.llastkrakw.nevernote.feature.note.receiver.NoteAlarmReceiver
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.receiver.TaskAlarmReceiver
 import com.llastkrakw.nevernote.feature.task.repositories.TaskRepository
@@ -24,7 +19,7 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
 
     val allTask : LiveData<List<Task>> = taskRepository.allTask.asLiveData()
 
-    private val _completedListSize = MutableLiveData<Int>(0)
+    private val _completedListSize = MutableLiveData(0)
     var completedListSize : LiveData<Int> = _completedListSize
 
     private val alarmManager = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -32,11 +27,11 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
 
     init {
         viewModelScope.launch {
-            allTask.observeForever(Observer {
+            allTask.observeForever {
                 _completedListSize.value = it.filter { task ->
                     task.taskStatus
                 }.size
-            })
+            }
         }
     }
 

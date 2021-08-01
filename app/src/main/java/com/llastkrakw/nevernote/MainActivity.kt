@@ -1,8 +1,6 @@
 package com.llastkrakw.nevernote
 
 
-import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -29,7 +27,6 @@ import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.setTextViewDr
 import com.llastkrakw.nevernote.databinding.ActivityMainBinding
 import com.llastkrakw.nevernote.feature.note.adapters.AddFolderAdapter
 import com.llastkrakw.nevernote.feature.note.datas.entities.Folder
-import com.llastkrakw.nevernote.feature.note.datas.entities.Note
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import com.llastkrakw.nevernote.views.notes.activities.AddNoteActivity
@@ -47,33 +44,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var isDark : Any
 
-    private val noteViewModel : NoteViewModel by viewModels(){
+    private val noteViewModel : NoteViewModel by viewModels {
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
     private lateinit var addFolderAdapter : AddFolderAdapter
     private lateinit var folderRecyclerView: RecyclerView
 
-    companion object{
-        const val ADD_NOTE_REQUEST_CODE = 10
-    }
-
     private lateinit var layoutBottomSheet: LinearLayout
 
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
-    @Suppress("DEPRECATION")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == ADD_NOTE_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            data?.getParcelableExtra<Note>(AddNoteActivity.EXTRA_NOTE).let {
-                if(it != null)
-                    noteViewModel.insertNote(it)
-            }
-        }
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -106,12 +87,11 @@ class MainActivity : AppCompatActivity() {
                 showNoteActionDialog(it)
             }
 
-            add.setOnClickListener(){
+            add.setOnClickListener {
                 when(viewPager.currentItem){
                     0 -> {
                         val intent = Intent(this@MainActivity, AddNoteActivity::class.java)
-                        @Suppress("DEPRECATION")
-                        startActivityForResult(intent, ADD_NOTE_REQUEST_CODE)
+                        startActivity(intent)
                     }
                     1 -> {
                         AddTaskFragment().show(supportFragmentManager, "Add task")
@@ -174,6 +154,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.action_select_all_note ->{
+            noteViewModel.selectAll()
             Log.d("multi", "selected all")
             true
         }
@@ -194,12 +175,12 @@ class MainActivity : AppCompatActivity() {
     private fun showNoteActionDialog(view: View){
         val items = arrayOf<CharSequence>("Trash", "New Folder")
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setItems(items,
-                DialogInterface.OnClickListener { _, selected ->
-                    when (selected) {
-                        1 -> showAddFolderDialog()
-                    }
-                })
+        builder.setItems(items
+        ) { _, selected ->
+            when (selected) {
+                1 -> showAddFolderDialog()
+            }
+        }
 
         val dialog: AlertDialog = builder.create()
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -212,7 +193,7 @@ class MainActivity : AppCompatActivity() {
         wmlp.y = point.y //y position
 
         dialog.show()
-        dialog.window!!.setLayout(600, 400);
+        dialog.window!!.setLayout(600, 400)
     }
 
     private fun showAddFolderDialog(){
@@ -227,7 +208,7 @@ class MainActivity : AppCompatActivity() {
         val addButton = folderView.findViewById<TextView>(R.id.button_add_folder)
         val cancelButton = folderView.findViewById<TextView>(R.id.add_folder_cancel)
 
-        addButton.setOnClickListener(){
+        addButton.setOnClickListener {
            editText.text?.let {
                if(it.toString().isNotEmpty()){
                    val folder = Folder(null, it.toString(), Date())
@@ -237,7 +218,7 @@ class MainActivity : AppCompatActivity() {
            }
         }
 
-        cancelButton.setOnClickListener(){
+        cancelButton.setOnClickListener {
             alertDialog.cancel()
         }
 
@@ -248,13 +229,13 @@ class MainActivity : AppCompatActivity() {
 
         val items = arrayOf<CharSequence>("ListView", "GridView", "Setting")
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setItems(items,
-                DialogInterface.OnClickListener { _, selected ->
-                    when (selected) {
-                        1 -> noteViewModel.toggleLayoutNoteManager(true)
-                        0 -> noteViewModel.toggleLayoutNoteManager(false)
-                    }
-                })
+        builder.setItems(items
+        ) { _, selected ->
+            when (selected) {
+                1 -> noteViewModel.toggleLayoutNoteManager(true)
+                0 -> noteViewModel.toggleLayoutNoteManager(false)
+            }
+        }
 
         val dialog: AlertDialog = builder.create()
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -267,7 +248,7 @@ class MainActivity : AppCompatActivity() {
 
 
         dialog.show()
-        dialog.window!!.setLayout(650, 550);
+        dialog.window!!.setLayout(650, 550)
     }
 
     override fun onBackPressed() {
@@ -315,7 +296,15 @@ class MainActivity : AppCompatActivity() {
                 }
             } // Night mode is not active, we're using the light theme
             Configuration.UI_MODE_NIGHT_YES -> {
-
+                if (position == 0) {
+                    binding.actionTask.setTextColor(getColor(R.color.hidden_text))
+                    binding.actionNote.setTextColor(getColor(R.color.black))
+                    setTextViewDrawableColor(binding.actionNote, R.color.black)
+                } else {
+                    binding.actionTask.setTextColor(getColor(R.color.black))
+                    binding.actionNote.setTextColor(getColor(R.color.hidden_text))
+                    setTextViewDrawableColor(binding.actionNote, R.color.hidden_text)
+                }
             } // Night mode is active, we're using dark theme
         }
     }

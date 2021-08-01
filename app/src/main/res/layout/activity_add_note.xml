@@ -22,17 +22,30 @@
             />
 
 
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+            app:layout_constraintBottom_toTopOf="@id/add_note_bottom">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <EditText
                     android:id="@+id/edit_text_note_title"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:padding="10dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/my_toolbar"
                     android:hint="@string/title"
                     android:autofillHints="@string/title"
                     android:background="@null"
@@ -40,7 +53,7 @@
 
                 <EditText
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/edit_text_note_content"
                     android:autoLink="all"
                     android:minLines="1"
@@ -59,9 +72,25 @@
                     app:layout_constraintTop_toBottomOf="@id/edit_text_note_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:autofillHints="@string/content"
                     android:hint="@string/content"/>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/record_recycler"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    tools:listitem="@layout/record_item"
+                    app:layout_constraintTop_toBottomOf="@id/edit_text_note_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
 
 
@@ -83,29 +112,38 @@
                  android:layout_width="0dp"
                  android:layout_height="wrap_content"
                  android:orientation="horizontal"
-                 android:padding="12dp"
+                 android:padding="15dp"
                  android:gravity="center_horizontal"
                  app:layout_constraintTop_toTopOf="parent"
                  app:layout_constraintEnd_toEndOf="parent"
                  app:layout_constraintStart_toStartOf="parent">
 
                  <ImageView
-                     android:id="@+id/add_other"
+                     android:id="@+id/add_drawing"
                      android:layout_width="30dp"
                      android:layout_height="30dp"
-                     android:src="@drawable/ic_add"
+                     android:src="@drawable/ic_illustrator"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
-                     android:contentDescription="@string/content"/>
+                     android:contentDescription="@string/add_shape"/>
+
+                 <ImageView
+                     android:id="@+id/add_recorder"
+                     android:layout_width="30dp"
+                     android:layout_height="30dp"
+                     android:src="@drawable/ic_microphone"
+                     android:layout_marginStart="12dp"
+                     android:layout_marginEnd="20dp"
+                     android:contentDescription="@string/add_audio"/>
 
                  <ImageView
                      android:id="@+id/add_link"
                      android:layout_width="30dp"
                      android:layout_height="30dp"
-                     android:src="@drawable/ic_link"
+                     android:src="@drawable/ic_add_link"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
-                     android:contentDescription="@string/content"/>
+                     android:contentDescription="@string/add_link"/>
 
                  <ImageView
                      android:id="@+id/add_color"
@@ -114,7 +152,7 @@
                      android:src="@drawable/ic_color_wheel_2"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
-                     android:contentDescription="@string/content"/>
+                     android:contentDescription="@string/add_color"/>
 
                  <ImageView
                      android:id="@+id/add_cloth"
@@ -123,7 +161,7 @@
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
                      android:src="@drawable/ic_t_shirt"
-                     android:contentDescription="@string/content"/>
+                     android:contentDescription="@string/add_note_background"/>
 
                  <ImageView
                      android:id="@+id/edit_action"
@@ -131,8 +169,8 @@
                      android:layout_height="30dp"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="12dp"
-                     android:src="@drawable/ic_text_icon"
-                     android:contentDescription="@string/content"/>
+                     android:src="@drawable/ic_sentence_case"
+                     android:contentDescription="@string/modify_text"/>
 
              </LinearLayout>
 
