@@ -7,6 +7,9 @@
 
 <!-- [***NeverNote APK***](https://github.com/llastkrakw/NeverNote/blob/master/NeverNote.apk) -->
 
+### MAD Skills
+![MAD Skills Card](https://github.com/llastkrakw/NeverNote/blob/dev/mad_scorecard/summary.png)
+
 Getting Started
 ---------------
 
