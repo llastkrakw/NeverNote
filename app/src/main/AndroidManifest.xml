@@ -3,7 +3,13 @@
     package="com.llastkrakw.nevernote">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
 
     <application
         android:name=".NeverNoteApplication"
@@ -11,6 +17,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
+        android:allowBackup="true"
         android:theme="@style/Theme.NeverNote">
         <activity android:name=".views.notes.activities.NoteCalendarView"/>
         <activity android:name=".views.task.activities.TaskCalendarView"/>
@@ -19,11 +27,18 @@
         <activity android:name=".views.notes.activities.NoteDetailActivity" />
         <activity
             android:name=".views.notes.activities.AddNoteActivity"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity android:name=".views.notes.activities.SearchNoteActivity" />
         <activity
             android:name=".views.splashScreen.SplashScreenActivity"
-            android:theme="@style/Theme.NeverNote.Splash">
+            android:theme="@style/Theme.NeverNote.Splash"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,6 +57,16 @@
             android:name=".feature.task.receiver.TaskAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <service android:name=".feature.note.services.RecorderService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.llastkrakw.nevernote.action.GET_RECORDER_INFO" />
+                <action android:name="com.llastkrakw.nevernote.action.STOP_AMPLITUDE_UPDATE" />
+                <action android:name="com.llastkrakw.nevernote.action.TOGGLE_PAUSE" />
+                <action android:name="com.llastkrakw.nevernote.action.CANCEL_RECORDING" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

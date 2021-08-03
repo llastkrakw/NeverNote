@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import com.kizitonwose.calendarview.CalendarView
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -21,14 +20,8 @@ import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.databinding.ActivityNoteCalendarViewBinding
 import com.llastkrakw.nevernote.databinding.CalendarDayLayoutBinding
 import com.llastkrakw.nevernote.databinding.CalendarMonthHeaderLayoutBinding
-import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
-import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
-import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModelFactory
-import com.llastkrakw.nevernote.views.notes.fragments.NoteTimePickerFragment
-import com.llastkrakw.nevernote.views.task.fragments.AddTaskFragment
 import com.llastkrakw.nevernote.views.task.fragments.AddTaskFragment.Companion.TASK_CONTENT_REMINDER
 import com.llastkrakw.nevernote.views.task.fragments.TaskTimerPickerFragment
 import java.time.LocalDate
@@ -92,7 +85,7 @@ class TaskCalendarView : AppCompatActivity() {
                 else {
                     // Hide in and out dates
                     //textView.visibility = View.INVISIBLE
-                    container.textView.setTextColor(getColor(R.color.search_button_color_light))
+                    container.textView.setTextColor(getColor(R.color.search_button_color))
                 }
             }
 

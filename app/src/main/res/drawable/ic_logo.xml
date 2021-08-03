@@ -5,20 +5,20 @@
     android:viewportHeight="70.4">
   <path
       android:pathData="M37.67,37.59l-15.5,4.59l-21.77,6.45l-0.32,0.1l0,-48.73l22.09,22.09l0,19.61l15.15,-4.46l0.35,0.35z"
-      android:fillColor="@color/black"/>
+      android:fillColor="@color/icon_color"/>
   <path
       android:pathData="M54.19,32.69l13.92,13.92l0,21.42l-30.44,-30.44l16.52,-4.9z"
-      android:fillColor="@color/black"/>
+      android:fillColor="@color/icon_color"/>
   <path
       android:pathData="M90.15,22.03l-22.04,6.53l0,-28.56l21.77,21.76l0.27,0.27z"
-      android:fillColor="@color/black"/>
+      android:fillColor="@color/icon_color"/>
   <path
       android:pathData="M0.08,48.21l22.09,-6.51l0,28.7l-21.77,-21.77l-0.32,-0.32l-0.08,-0.08l0.08,-0.02z"
-      android:fillColor="@color/black"/>
+      android:fillColor="@color/icon_color"/>
   <path
       android:pathData="M53.87,32.37l-16.55,4.87l-15.15,-15.15l0,-21.42l31.7,31.7z"
-      android:fillColor="@color/black"/>
+      android:fillColor="@color/icon_color"/>
   <path
       android:pathData="M90.2,21.67l0,47.03l-22.09,-22.09l0,-18.05l-13.92,4.13l-0.32,-0.32l14.24,-4.2l21.77,-6.41l0.32,-0.09z"
-      android:fillColor="@color/black"/>
+      android:fillColor="@color/icon_color"/>
 </vector>

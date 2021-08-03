@@ -1,6 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/add_button_bg.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/add_edittext_bg.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/bg_add_folder_bts.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/button_search_bg.xml" value="0.3685185185185185" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/button_search_bg_light.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/categorize_bg.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/clock_bg.xml" value="0.32314814814814813" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/date_bg.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/date_selection_background.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/edit_text_button.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_add.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_add_folder.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_add_link.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_alarm_clock.xml" value="0.2203125" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_alarm_clock_filled.xml" value="0.32314814814814813" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_align_cell_content_center.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_align_cell_content_left.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_align_cell_content_right.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_align_left.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_audio_wave.xml" value="0.32314814814814813" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_baseline_alarm_24.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_bold.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_cancel.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_check_all.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_checked.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_checkmark.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_checkmark_disable.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_clothes.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_color_wheel_2.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_documents_folder.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_folder.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_full_trash.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_illustrator.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_image_file.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_increase_font.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_italic.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_keyboard.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_launcher_background.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_link.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_logo.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_microphone.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_microphone_notif.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_microphone_shape.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_note.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_pause.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_picture.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_plus_math.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_redo.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_redo_disable.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_round_close_24.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_round_pause_24.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_round_play_arrow_24.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_search.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_sentence_case.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_share.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_share_rounded.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_t_shirt.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_text.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_text_icon.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_underline.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_undo.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_undo_disable.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_womens_shirt.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/ic_yellow_document.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/play_card_toggle.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/record_screen_bg.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/sheet_bg.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/stroke_blue.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/drawable/toggle_record_shape.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/activity_add_note.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/activity_folder_detail.xml" value="0.13722826086956522" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/activity_main.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/activity_note_calendar_view.xml" value="0.15942028985507245" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/activity_note_detail.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/activity_search_note.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/activity_search_task.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/add_folder.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/add_folder_bottom_sheet.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/add_task_layout.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/calendar_day_layout.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/calendar_day_legend.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/calendar_month_header_layout.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/folder_item.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/fragment_note.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/fragment_task.xml" value="0.15942028985507245" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/note_item.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/record_item.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/recording_layout.xml" value="0.18819655521783182" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/layout/task_item.xml" value="0.15942028985507245" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/menu/folder_detail_menu.xml" value="0.38697916666666665" />
+        <entry key="..\:/AndroidStudioProject/NeverNote/app/src/main/res/menu/selection_menu.xml" value="0.20416666666666666" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

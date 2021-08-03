@@ -1,5 +1,5 @@
 <vector android:height="90dp" android:viewportHeight="512"
     android:viewportWidth="512" android:width="90dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/search_button_color_light" android:fillType="nonZero"
+    <path android:fillColor="@color/search_button_color" android:fillType="nonZero"
         android:pathData="M204.5,84.5L76.5,212.5L65.5,224L76.5,235.5L204.5,363.5L227.5,340.5L127,240L336,240C380.063,240 416,275.938 416,320L416,432L448,432L448,320C448,258.5 397.5,208 336,208L127,208L227.5,107.5Z" android:strokeColor="#00000000"/>
 </vector>

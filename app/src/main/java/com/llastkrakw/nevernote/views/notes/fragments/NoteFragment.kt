@@ -6,26 +6,26 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.BoringLayout
 import android.util.Log
-import android.view.*
-import androidx.core.content.ContextCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.distinctUntilChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.databinding.FragmentNoteBinding
-import com.llastkrakw.nevernote.feature.note.adapters.AddFolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.FolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import com.llastkrakw.nevernote.views.notes.activities.SearchNoteActivity
+import kotlin.properties.Delegates
 
 
 class NoteFragment : Fragment() {
@@ -34,19 +34,16 @@ class NoteFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private var isLinearLayoutManager = true
-    private var isNoteNext : Boolean = false
 
-    private val noteViewModel : NoteViewModel by activityViewModels(){
+    private val noteViewModel : NoteViewModel by activityViewModels {
         NoteViewModelFactory((activity?.application as NeverNoteApplication).noteRepository, activity?.application as NeverNoteApplication)
     }
 
     private lateinit var  noteAdapter : NoteAdapter
     private lateinit var folderAdapter : FolderAdapter
 
+    private var localIsNotNext : Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -70,26 +67,39 @@ class NoteFragment : Fragment() {
             recyclerView = noteRecycler
             recyclerView.adapter = noteAdapter
 
-            noteViewModel.allNotesAscWithFolders.observe(viewLifecycleOwner, Observer { notes ->
+            noteViewModel.isNotNext.observe(viewLifecycleOwner, { isNoteNext ->
+                localIsNotNext = isNoteNext
+            })
+
+            Log.d("note_next", "is not next in on create $localIsNotNext")
+            verifyNext(this)
+
+            noteViewModel.allNotesAscWithFolders.observe(viewLifecycleOwner, { notes ->
                 notes?.let { noteAdapter.submitList(it) }
             })
 
-            noteViewModel.allFolderWithNotes.observe(viewLifecycleOwner, Observer { folders ->
+            noteViewModel.allFolderWithNotes.observe(viewLifecycleOwner, { folders ->
                 folders?.let {
                     folderAdapter.submitList(it)
                 }
             })
 
-            noteViewModel.isGrid.observe(viewLifecycleOwner, Observer { isGrid ->
+            noteViewModel.isGrid.observe(viewLifecycleOwner, { isGrid ->
                 isLinearLayoutManager = isGrid
                 chooseLayoutManager()
             })
 
-            noteViewModel.isCleared.observe(viewLifecycleOwner,  {
-                if (it)
+            noteViewModel.isClear.observe(viewLifecycleOwner,  {
+                Log.d("clear_bug", "selection was clear is $it")
+                if(it)
                     noteAdapter.notifyDataSetChanged()
             })
 
+            noteViewModel.allNoteSelected.observe(viewLifecycleOwner,  {
+                Log.d("clear_bug", "all notes selected $it")
+                if(it)
+                    noteAdapter.notifyDataSetChanged()
+            })
 
             noteToggle.setOnClickListener {
                 toggleAdapter()
@@ -100,24 +110,32 @@ class NoteFragment : Fragment() {
                 val  intent = Intent(context, SearchNoteActivity::class.java)
                 activity?.startActivity(intent)
             }
+
         }
 
-        //verifyNext(binding)
         chooseLayoutManager()
     }
 
     private fun verifyNext(binding: FragmentNoteBinding){
         binding.apply {
-            if(isNoteNext){
+            if(localIsNotNext){
+                noteViewModel.allFolderWithNotes.observe(viewLifecycleOwner, { folders ->
+                    nothingToShow.visibility = if(folders.isNotEmpty()) View.GONE else View.VISIBLE
+                })
                 noteToggle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_note, 0, 0, 0)
                 noteToggle.text = getString(R.string.see_notes)
                 noteItemCount.text = String.format(getString(R.string.items), noteViewModel.allFolderWithNotes.value?.size)
             }
             else{
+                noteViewModel.allNotesAscWithFolders.observe(viewLifecycleOwner, { notes ->
+                    nothingToShow.visibility = if(notes.isNotEmpty()) View.GONE else View.VISIBLE
+                })
                 noteToggle.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_documents_folder, 0, 0, 0)
                 noteToggle.text = getString(R.string.see_folders)
                 noteItemCount.text = String.format(getString(R.string.items), noteViewModel.allNotesAsc.value?.size)
             }
+
+            Log.d("note_next", "is not next in verify $localIsNotNext")
         }
     }
 
@@ -130,15 +148,15 @@ class NoteFragment : Fragment() {
     }
 
     private fun toggleAdapter(){
-        if (isNoteNext){
+        if (localIsNotNext){
             recyclerView.adapter = noteAdapter
             recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-            isNoteNext = false
+            noteViewModel.toggleIsNoteNext()
         }
         else{
             recyclerView.adapter = folderAdapter
             recyclerView.layoutManager = LinearLayoutManager(context)
-            isNoteNext = true
+            noteViewModel.toggleIsNoteNext()
         }
     }
 

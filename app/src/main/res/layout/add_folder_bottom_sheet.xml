@@ -10,12 +10,12 @@
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/folder_bottom_sheet"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        style="@style/Theme.NeverNote.Background">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:padding="20dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout

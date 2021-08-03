@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
+        style="@style/Theme.NeverNote.Background"
         tools:context=".views.notes.activities.SearchNoteActivity">
 
         <EditText
@@ -19,7 +20,7 @@
             android:autofillHints="@string/search_notes"
             android:hint="@string/search_notes"
             android:inputType="textAutoComplete"
-            android:background="@drawable/button_search_bg_light"
+            android:background="@drawable/button_search_bg"
             android:padding="10dp"
             android:layout_marginEnd="5dp"
             />
@@ -48,5 +49,18 @@
             android:layout_marginTop="10dp"
             />
 
+<!--        <TextView
+            android:id="@+id/nothing_to_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/primaryColor"
+            android:text="@string/nothing_to_show_there"
+            app:drawableTopCompat="@drawable/ic_yellow_document"
+            android:layout_marginTop="50dp"
+            android:visibility="gone"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

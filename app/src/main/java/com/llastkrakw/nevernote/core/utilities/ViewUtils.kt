@@ -1,7 +1,6 @@
 package com.llastkrakw.nevernote.core.utilities
 
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
@@ -16,7 +15,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.feature.note.datas.entities.Folder
-import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import java.util.*
 

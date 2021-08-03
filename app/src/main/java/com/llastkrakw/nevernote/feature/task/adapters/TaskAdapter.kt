@@ -1,5 +1,6 @@
 package com.llastkrakw.nevernote.feature.task.adapters
 
+import android.os.Build
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StrikethroughSpan
@@ -7,14 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleOwner
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.R
-import com.llastkrakw.nevernote.feature.note.datas.entities.Note
+import com.llastkrakw.nevernote.core.extension.dateExpired
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import java.util.*
@@ -26,6 +28,7 @@ class TaskAdapter(private val taskViewModel: TaskViewModel, private val owner: L
         return TaskViewHolder.create(parent, taskViewModel, owner)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(current)
@@ -36,7 +39,9 @@ class TaskAdapter(private val taskViewModel: TaskViewModel, private val owner: L
 
         private val status : CheckBox = itemView.findViewById(R.id.is_complete)
         private val content : TextView = itemView.findViewById(R.id.task_content)
+        private val haveClock: ImageButton = itemView.findViewById(R.id.have_clock)
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(task: Task){
             status.isChecked = task.taskStatus
             if (task.taskStatus){
@@ -46,6 +51,8 @@ class TaskAdapter(private val taskViewModel: TaskViewModel, private val owner: L
             }
             else
                 content.text = task.taskContent
+
+            haveClock.visibility = if(task.taskReminder != null && !task.taskReminder!!.dateExpired()) View.VISIBLE else View.GONE
 
             status.setOnCheckedChangeListener { _, isChecked ->
                 task.taskStatus = isChecked
@@ -72,7 +79,8 @@ class TaskAdapter(private val taskViewModel: TaskViewModel, private val owner: L
         }
         else {
             for (item in completeList) {
-                if (item.taskContent.toLowerCase(Locale.ROOT).contains(constraint.toString().toLowerCase(Locale.ROOT))) {
+                if (item.taskContent.lowercase(Locale.ROOT).contains(constraint.toString()
+                        .lowercase(Locale.ROOT))) {
                     filteredList.add(item)
                 }
             }

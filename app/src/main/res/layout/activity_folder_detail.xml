@@ -3,76 +3,96 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.notes.activities.FolderDetailActivity">
+        style="@style/Theme.NeverNote.Background">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/my_toolbar"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
-            android:theme="@style/Theme.NeverNote.ActionBar"
-            app:popupTheme="@style/Theme.NeverNote.ActionBar.PopUp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            android:layout_height="match_parent"
+            tools:context=".views.notes.activities.FolderDetailActivity">
 
-        <TextView
-            android:id="@+id/folder_date_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/my_toolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textColor="@color/hidden_text_light"
-            android:fontFamily="@font/tt_norms_pro_light"
-            android:textSize="12sp"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="20dp"/>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/my_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="4dp"
+                android:theme="@style/Theme.NeverNote.ActionBar"
+                app:popupTheme="@style/Theme.NeverNote.ActionBar.PopUp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
 
-
-        <TextView
-            android:id="@+id/folder_notes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/categorize_bg"
-            android:textColor="@color/secondaryColor"
-            app:drawableStartCompat="@drawable/ic_note"
-            android:drawablePadding="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/folder_date_size"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/folder_date_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/hidden_text_light"
+                android:fontFamily="@font/tt_norms_pro_light"
+                android:textSize="12sp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"/>
 
 
-        <TextView
-            android:id="@+id/folder_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/folder_notes"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:textSize="24sp"
-            android:fontFamily="@font/tt_norms_pro_bold"/>
+            <TextView
+                android:id="@+id/folder_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/categorize_bg"
+                android:textColor="@color/secondaryColor"
+                app:drawableStartCompat="@drawable/ic_note"
+                android:drawablePadding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/folder_date_size"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:textSize="13sp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/note_recycler"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/folder_title"
-            tools:listitem="@layout/note_item"
-            android:layout_marginTop="10dp"
-            android:padding="20dp"
-            />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/folder_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/folder_notes"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="24sp"
+                android:fontFamily="@font/tt_norms_pro_bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/note_recycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/folder_title"
+                tools:listitem="@layout/note_item"
+                android:layout_marginTop="10dp"
+                android:padding="20dp"
+                />
+
+
+            <TextView
+                android:id="@+id/nothing_to_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/folder_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/primaryColor"
+                android:text="@string/nothing_to_show_there"
+                app:drawableTopCompat="@drawable/ic_yellow_document"
+                android:layout_marginTop="50dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 </layout>

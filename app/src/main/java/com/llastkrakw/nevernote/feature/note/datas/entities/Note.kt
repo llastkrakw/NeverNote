@@ -1,13 +1,11 @@
 package com.llastkrakw.nevernote.feature.note.datas.entities
 
 import android.os.Parcelable
-import android.text.SpannableString
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.llastkrakw.nevernote.core.constants.*
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 import java.util.*
 
 @Entity(tableName = TABLE_NOTE)
@@ -20,6 +18,7 @@ data class Note(
     @ColumnInfo(name = NOTE_REMINDER) var noteReminder: Date?,
     @ColumnInfo(name = NOTE_LAST_UPDATE) var noteLastUpdate: Date,
     @ColumnInfo(name = NOTE_BG) var noteBg: String?,
+    @ColumnInfo(name = NOTE_COLOR) var noteColor: Int?,
 ) : Parcelable{
 
     override fun equals(other: Any?): Boolean {

@@ -5,7 +5,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        style="@style/Theme.NeverNote.Background">
 
         <ScrollView
             android:id="@+id/main"
@@ -58,6 +59,17 @@
                     android:padding="10dp"
                     android:textSize="13sp"/>
 
+                <ImageButton
+                    android:id="@+id/have_clock"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_alarm_clock_filled"
+                    android:contentDescription="@string/reminder"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@id/categorize"
+                    app:layout_constraintTop_toBottomOf="@id/note_date_size"/>
+
 
                 <TextView
                     android:id="@+id/note_title"
@@ -83,6 +95,18 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/note_title" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/record_recycler"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    tools:listitem="@layout/record_item"
+                    app:layout_constraintTop_toBottomOf="@id/note_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

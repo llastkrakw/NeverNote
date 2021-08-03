@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,6 @@ import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.utilities.SwipeCallback
 import com.llastkrakw.nevernote.databinding.FragmentTaskBinding
 import com.llastkrakw.nevernote.feature.task.adapters.TaskAdapter
-import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModelFactory
 import com.llastkrakw.nevernote.views.task.activities.SearchTaskActivity
@@ -36,10 +34,6 @@ class TaskFragment : Fragment() {
 
     private lateinit var incompleteTaskAdapter : TaskAdapter
     private lateinit var completeTaskAdapter  : TaskAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +64,7 @@ class TaskFragment : Fragment() {
                 completedTaskRecycler.adapter = completeTaskAdapter
 
 
-                taskViewModel.allTask.observe(viewLifecycleOwner, Observer { taskList ->
+                taskViewModel.allTask.observe(viewLifecycleOwner, { taskList ->
 
                     taskList.filter {
                         !it.taskStatus
@@ -95,7 +89,7 @@ class TaskFragment : Fragment() {
 
                 val swipeIncompleteCallback = object : SwipeCallback(it){
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                        val position = viewHolder.adapterPosition
+                        val position = viewHolder.absoluteAdapterPosition
                         val task = incompleteTaskAdapter.currentList[position]
                         taskViewModel.deleteTask(task)
                     }
@@ -103,7 +97,7 @@ class TaskFragment : Fragment() {
 
                 val swipeCompleteCallback = object : SwipeCallback(it){
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                        val position = viewHolder.adapterPosition
+                        val position = viewHolder.absoluteAdapterPosition
                         val task = completeTaskAdapter.currentList[position]
                         taskViewModel.deleteTask(task)
                     }

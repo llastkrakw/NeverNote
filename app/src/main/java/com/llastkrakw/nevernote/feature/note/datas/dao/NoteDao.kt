@@ -5,7 +5,7 @@ import com.llastkrakw.nevernote.core.constants.NOTE_LAST_UPDATE
 import com.llastkrakw.nevernote.core.constants.NOTE_TITLE
 import com.llastkrakw.nevernote.core.constants.TABLE_NOTE
 import com.llastkrakw.nevernote.feature.note.datas.entities.Note
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
+import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,7 +15,7 @@ interface NoteDao {
 
     @Transaction
     @Query("SELECT * FROM TABLE_NOTE ORDER BY $NOTE_TITLE ASC")
-    fun getAlphabetizedNotesWithFolders(): Flow<List<NoteWithFolders>>
+    fun getAlphabetizedNotesWithFoldersAndRecords(): Flow<List<NoteWithFoldersAndRecords>>
 
     @Query("SELECT * FROM TABLE_NOTE ORDER BY $NOTE_LAST_UPDATE ASC")
     fun getLastUpdateNotes(): Flow<List<Note>>

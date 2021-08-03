@@ -2,8 +2,6 @@ package com.llastkrakw.nevernote.views.notes.fragments
 
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.content.Intent
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
@@ -12,17 +10,15 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
-import com.llastkrakw.nevernote.MainActivity
-import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFolders
+import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 
 
-class NoteTimePickerFragment(private val noteViewModel: NoteViewModel, private val note : NoteWithFolders, private val date: Long) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class NoteTimePickerFragment(private val noteViewModel: NoteViewModel, private val note : NoteWithFoldersAndRecords, private val date: Long) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

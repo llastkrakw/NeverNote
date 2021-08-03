@@ -2,8 +2,6 @@ package com.llastkrakw.nevernote.views.task.fragments
 
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
@@ -57,7 +55,7 @@ class AddTaskFragment : DialogFragment() {
             }
         }
 
-        addButton.setOnClickListener(){
+        addButton.setOnClickListener {
             editText.text?.let {
                 if(it.toString().isNotEmpty()){
                     taskViewModel.insertTask(Task(null, it.toString(), Date(), null, false), null)
