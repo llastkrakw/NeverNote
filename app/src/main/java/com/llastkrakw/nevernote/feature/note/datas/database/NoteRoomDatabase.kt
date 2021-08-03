@@ -104,6 +104,7 @@ abstract class NoteRoomDatabase : RoomDatabase() {
                 null,
                 Date(),
                 null,
+                null,
             )
 
             val noteId1 : Long = noteDao.insert(note)
@@ -137,6 +138,7 @@ abstract class NoteRoomDatabase : RoomDatabase() {
                 null,
                 Date(),
                 null,
+                null
             )
 
             val noteId2 : Long = noteDao.insert(note2)
@@ -170,6 +172,7 @@ abstract class NoteRoomDatabase : RoomDatabase() {
                 null,
                 Date(),
                 null,
+                null
             )
 
             val noteId3 : Long = noteDao.insert(note3)
@@ -203,6 +206,7 @@ abstract class NoteRoomDatabase : RoomDatabase() {
                 null,
                 Date(),
                 null,
+                null
             )
 
             val noteId4 : Long = noteDao.insert(note4)

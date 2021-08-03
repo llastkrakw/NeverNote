@@ -5,14 +5,20 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.AlarmManagerCompat
 import androidx.lifecycle.*
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_TASK_EXTRA
+import com.llastkrakw.nevernote.core.extension.toast
 import com.llastkrakw.nevernote.core.utilities.marshallParcelable
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.receiver.TaskAlarmReceiver
 import com.llastkrakw.nevernote.feature.task.repositories.TaskRepository
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.*
 
 class TaskViewModel(private val taskRepository: TaskRepository, private val app : Application) : ViewModel() {
 
@@ -35,6 +41,7 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun insertTask(task: Task, selectedTime: Long?) = viewModelScope.launch {
         task.taskId = taskRepository.insertTask(task)
         if (selectedTime != null)
@@ -47,8 +54,10 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
 
     fun updateTask(task: Task) = viewModelScope.launch {
         taskRepository.updateTask(task)
+        app.toast("task ${task.taskContent} was update")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun addTaskReminder(task: Task, selectedTime : Long) = viewModelScope.launch {
 
         val notifyIntent = Intent(app, TaskAlarmReceiver::class.java)
@@ -80,6 +89,10 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
                 notifyPendingIntent
             )
         }
+
+        task.taskReminder = Date.from(Instant.ofEpochMilli(selectedTime))
+
+        updateTask(task)
     }
 
 

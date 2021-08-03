@@ -18,6 +18,7 @@ data class Note(
     @ColumnInfo(name = NOTE_REMINDER) var noteReminder: Date?,
     @ColumnInfo(name = NOTE_LAST_UPDATE) var noteLastUpdate: Date,
     @ColumnInfo(name = NOTE_BG) var noteBg: String?,
+    @ColumnInfo(name = NOTE_COLOR) var noteColor: Int?,
 ) : Parcelable{
 
     override fun equals(other: Any?): Boolean {

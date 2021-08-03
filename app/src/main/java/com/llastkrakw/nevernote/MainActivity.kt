@@ -122,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         noteViewModel.selectedNotes.observe(this, {
@@ -154,7 +155,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.action_select_all_note ->{
-            noteViewModel.selectAll()
+            noteViewModel.allNoteSelected.value?.let{
+                if (it)
+                    noteViewModel.deselectAll()
+                else
+                    noteViewModel.selectAll()
+            }
             Log.d("multi", "selected all")
             true
         }
@@ -298,10 +304,10 @@ class MainActivity : AppCompatActivity() {
             Configuration.UI_MODE_NIGHT_YES -> {
                 if (position == 0) {
                     binding.actionTask.setTextColor(getColor(R.color.hidden_text))
-                    binding.actionNote.setTextColor(getColor(R.color.black))
-                    setTextViewDrawableColor(binding.actionNote, R.color.black)
+                    binding.actionNote.setTextColor(getColor(R.color.white))
+                    setTextViewDrawableColor(binding.actionNote, R.color.white)
                 } else {
-                    binding.actionTask.setTextColor(getColor(R.color.black))
+                    binding.actionTask.setTextColor(getColor(R.color.white))
                     binding.actionNote.setTextColor(getColor(R.color.hidden_text))
                     setTextViewDrawableColor(binding.actionNote, R.color.hidden_text)
                 }

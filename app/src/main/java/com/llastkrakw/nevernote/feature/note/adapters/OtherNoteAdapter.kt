@@ -2,6 +2,7 @@ package com.llastkrakw.nevernote.feature.note.adapters
 
 import android.content.Intent
 import android.content.res.TypedArray
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.MAX_CONTENT
 import com.llastkrakw.nevernote.core.constants.MAX_TITLE
+import com.llastkrakw.nevernote.core.extension.dateExpired
 import com.llastkrakw.nevernote.core.utilities.FormatUtils.Companion.toSimpleString
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
 import com.llastkrakw.nevernote.feature.note.datas.entities.Note
@@ -35,6 +38,7 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
         return NoteViewHolder.create(parent, noteViewModel, owner)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(current)
@@ -45,7 +49,8 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
 
         private lateinit var  currentNote : Note
         private var colors: TypedArray = itemView.resources.obtainTypedArray(R.array.random_color)
-        var color = colors.getColor(Random().nextInt(8), 0)
+        private val colorId = Random().nextInt(8)
+        var color = colors.getColor(colorId, 0)
 
         private val noteCard: CardView = itemView.findViewById(R.id.note_card)
 
@@ -56,7 +61,9 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
         private val check: ImageView = itemView.findViewById(R.id.isChecked)
         private val haveAudio: ImageButton = itemView.findViewById(R.id.have_audio)
         private val haveClock: ImageButton = itemView.findViewById(R.id.have_clock)
+        private val haveBg: ImageButton = itemView.findViewById(R.id.have_bg)
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(note: Note) {
             currentNote = note
             val title = toSpannable(currentNote.noteTitle)
@@ -75,17 +82,27 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
             else
                 noteTitle.text = title.toString()
 
-            noteCard.setCardBackgroundColor(color)
+            if(note.noteColor == null){
+                noteCard.setCardBackgroundColor(color)
+                note.noteColor = colorId
+                noteViewModel.updateNote(note)
+            }
+            else{
+                noteCard.setCardBackgroundColor(colors.getColor(note.noteColor!!, 0))
+            }
             noteDate.text = toSimpleString(date)
 
             //haveAudio.visibility = if(note.recordsRef.isNotEmpty()) View.VISIBLE else View.GONE
-            haveClock.visibility = if(note.noteReminder != null) View.VISIBLE else View.GONE
+            haveClock.visibility = if(note.noteReminder != null && !note.noteReminder!!.dateExpired()) View.VISIBLE else View.GONE
+            haveBg.visibility = if(note.noteBg != null) View.VISIBLE else View.GONE
 
             itemView.setOnLongClickListener(this)
             itemView.setOnClickListener(this)
 
             noteViewModel.selectedNotes.observe(owner,  {
-                if (it.isEmpty())
+                if (it.contains(note))
+                    check.visibility = View.VISIBLE
+                else
                     check.visibility = View.GONE
             })
         }

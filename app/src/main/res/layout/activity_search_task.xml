@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
+        style="@style/Theme.NeverNote.Background"
         tools:context=".views.task.activities.SearchTaskActivity">
 
         <EditText
@@ -19,7 +20,7 @@
             android:autofillHints="@string/search_tasks"
             android:hint="@string/search_tasks"
             android:inputType="textAutoComplete"
-            android:background="@drawable/button_search_bg_light"
+            android:background="@drawable/button_search_bg"
             android:padding="10dp"
             android:layout_marginEnd="5dp"
             />

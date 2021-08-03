@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
+    android:padding="10dp"
+    style="@style/Theme.NeverNote.Background">
 
     <EditText
         android:id="@+id/edit_text_add_task"
@@ -31,8 +32,8 @@
         android:layout_margin="10dp"
         android:drawablePadding="10dp"
         android:padding="10dp"
-        app:drawableStartCompat="@drawable/ic_baseline_alarm_24"
-        android:background="@drawable/button_search_bg_light"/>
+        app:drawableStartCompat="@drawable/ic_alarm_clock_filled"
+        android:background="@drawable/button_search_bg"/>
 
     <TextView
         android:id="@+id/add_task"

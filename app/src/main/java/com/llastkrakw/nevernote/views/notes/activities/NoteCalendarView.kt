@@ -86,7 +86,7 @@ class NoteCalendarView : AppCompatActivity() {
                 else {
                     // Hide in and out dates
                     //textView.visibility = View.INVISIBLE
-                    container.textView.setTextColor(getColor(R.color.search_button_color_light))
+                    container.textView.setTextColor(getColor(R.color.search_button_color))
                 }
             }
 

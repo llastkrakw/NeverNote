@@ -6,6 +6,7 @@
     android:layout_margin="10dp"
     app:contentPadding="15dp"
     app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="@color/search_button_color"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="5dp"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/record_text_color"
             android:text="@string/record_title"
             android:layout_marginStart="12dp" />
 
@@ -59,7 +60,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="5dp"
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:textColor="@color/record_text_color"
             android:text="@string/record_timer_text"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

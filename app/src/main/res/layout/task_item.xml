@@ -6,7 +6,8 @@
     android:padding="12dp"
     android:layout_margin="12dp"
     app:cardCornerRadius="12dp"
-    app:contentPadding="5dp">
+    app:contentPadding="5dp"
+    app:cardBackgroundColor="@color/search_button_color">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,6 +28,16 @@
             app:layout_constraintStart_toEndOf="@id/is_complete"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageButton
+            android:id="@+id/have_clock"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_alarm_clock_filled"
+            android:contentDescription="@string/reminder"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -31,8 +31,14 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
     private val _isGrid = MutableLiveData(true)
     val isGrid: LiveData<Boolean> = _isGrid
 
+    private val _isClear = MutableLiveData(false)
+    val isClear: LiveData<Boolean> = _isClear
+
     private val _isNoteNext = MutableLiveData(false)
     val isNotNext : LiveData<Boolean> = _isNoteNext
+
+    private val _allNoteSelected = MutableLiveData(false)
+    val allNoteSelected : LiveData<Boolean> = _allNoteSelected
 
     private val _selectedNotes = MutableLiveData<MutableList<Note>>(mutableListOf())
     val selectedNotes : LiveData<MutableList<Note>> = _selectedNotes
@@ -94,6 +100,8 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
         selectedNotes.value?.let { noteRepository.deleteNotes(it.toList()) }
         _selectedNotes.value?.clear()
         app.toast("Notes was deleted")
+        _isClear.postValue(true)
+        _allNoteSelected.postValue(false)
     }
 
     fun deleteNote(note: Note) = viewModelScope.launch {
@@ -109,7 +117,7 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
                 it.add(note)
             Log.d("multi", "notes ${it.size}")
         }
-
+        _isClear.postValue(false)
         app.toast("note ${note.noteId} was selected")
     }
 
@@ -121,8 +129,15 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
                 Log.d("multi", "notes ${it.size}")
             }
         }
-
+        _allNoteSelected.postValue(true)
         app.toast("All notes selected")
+    }
+
+    fun deselectAll(){
+        _selectedNotes.value?.clear()
+        _isClear.postValue(true)
+        _allNoteSelected.postValue(false)
+        app.toast("All notes deselected")
     }
 
     fun deselectNote(note: Note){
@@ -220,7 +235,8 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
                     noteRepository.insertCrossRef(FolderNoteCrossRef(folder.folder.folderId, note.noteId!!))
         }
         _selectedNotes.value?.clear()
-
+        _isClear.postValue(true)
+        _allNoteSelected.postValue(false)
         app.toast("All notes was added to folder ${folder.folder.folderName}")
     }
 

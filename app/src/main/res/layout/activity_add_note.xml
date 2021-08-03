@@ -7,6 +7,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        style="@style/Theme.NeverNote.Background"
         tools:context=".views.notes.activities.AddNoteActivity">
 
         <androidx.appcompat.widget.Toolbar
@@ -120,8 +121,8 @@
 
                  <ImageView
                      android:id="@+id/add_drawing"
-                     android:layout_width="30dp"
-                     android:layout_height="30dp"
+                     android:layout_width="24dp"
+                     android:layout_height="24dp"
                      android:src="@drawable/ic_illustrator"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
@@ -129,8 +130,8 @@
 
                  <ImageView
                      android:id="@+id/add_recorder"
-                     android:layout_width="30dp"
-                     android:layout_height="30dp"
+                     android:layout_width="24dp"
+                     android:layout_height="24dp"
                      android:src="@drawable/ic_microphone"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
@@ -138,8 +139,8 @@
 
                  <ImageView
                      android:id="@+id/add_link"
-                     android:layout_width="30dp"
-                     android:layout_height="30dp"
+                     android:layout_width="24dp"
+                     android:layout_height="24dp"
                      android:src="@drawable/ic_add_link"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
@@ -147,8 +148,8 @@
 
                  <ImageView
                      android:id="@+id/add_color"
-                     android:layout_width="30dp"
-                     android:layout_height="30dp"
+                     android:layout_width="24dp"
+                     android:layout_height="24dp"
                      android:src="@drawable/ic_color_wheel_2"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
@@ -156,8 +157,8 @@
 
                  <ImageView
                      android:id="@+id/add_cloth"
-                     android:layout_width="30dp"
-                     android:layout_height="30dp"
+                     android:layout_width="24dp"
+                     android:layout_height="24dp"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
                      android:src="@drawable/ic_t_shirt"
@@ -165,11 +166,11 @@
 
                  <ImageView
                      android:id="@+id/edit_action"
-                     android:layout_width="30dp"
-                     android:layout_height="30dp"
+                     android:layout_width="24dp"
+                     android:layout_height="24dp"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="12dp"
-                     android:src="@drawable/ic_sentence_case"
+                     android:src="@drawable/ic_add_link"
                      android:contentDescription="@string/modify_text"/>
 
              </LinearLayout>

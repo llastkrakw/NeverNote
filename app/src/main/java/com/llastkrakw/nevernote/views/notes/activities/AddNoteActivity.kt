@@ -37,6 +37,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.llastkrakw.nevernote.MainActivity
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.extension.*
@@ -88,7 +89,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
     }
 
 
-    private var note : Note = Note(null, "", "", Date(), null, Date(), null)
+    private var note : Note = Note(null, "", "", Date(), null, Date(), null, null)
     private var noteId : Int? = null
     private var noteForUpdate : NoteWithFoldersAndRecords? = null
 
@@ -387,7 +388,6 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             super.onOptionsItemSelected(item)
         }
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

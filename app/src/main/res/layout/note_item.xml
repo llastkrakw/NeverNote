@@ -58,20 +58,29 @@
 
             <ImageButton
                 android:id="@+id/have_clock"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_alarm_clock_filled"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_alarm_clock"
                 android:contentDescription="@string/reminder"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/have_audio"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_audio_wave"
+                android:src="@drawable/ic_microphone_notif"
                 android:contentDescription="@string/audio"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/have_bg"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_womens_shirt"
+                android:contentDescription="@string/have_background"
+                android:layout_margin="5dp"
                 android:visibility="gone"/>
 
         </LinearLayout>

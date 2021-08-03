@@ -2,6 +2,7 @@ package com.llastkrakw.nevernote.views.notes.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -26,7 +27,9 @@ import com.bumptech.glide.request.transition.Transition
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_EXTRA
+import com.llastkrakw.nevernote.core.extension.dateExpired
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
+import com.llastkrakw.nevernote.core.utilities.ViewUtils
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.findOptimalOverlayOpacity
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getPixels
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getWorstContrastColorInImage
@@ -57,12 +60,14 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
         const val UPDATE_NOTE_REQUEST_CODE = 40
     }
 
+    private lateinit var isDark : Any
 
     private val imagePickerFragment = ImagePickerBottomsheet()
     private lateinit var imagePicker : ImagePickerActivityClass
 
     private var recordAdapter : RecordAdapter = RecordAdapter()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -81,6 +86,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
@@ -88,6 +94,8 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
         binding = ActivityNoteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
+
+        isDark = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
         imagePicker = ImagePickerActivityClass(this, this, activityResultRegistry,activity = this)
         imagePicker.cropOptions(true)
@@ -108,6 +116,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
             setUi(binding, noteWithFolders!!)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setUi(binding: ActivityNoteDetailBinding, noteWithFolders: NoteWithFoldersAndRecords){
 
         noteWithFolders.let { note ->
@@ -131,12 +140,15 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
                 noteContent.setText(toSpannable(note.note.noteContent), TextView.BufferType.SPANNABLE)
 
                 if(!note.note.noteBg.isNullOrEmpty()){
+                    Log.d("bg_issue", "bag is ${note.note.noteBg}")
                     scope.launch {
                         loadBg(noteWithFolders)
                     }
                 }
+                else
+                    Log.d("bg_issue", "bag is ${note.note.noteBg}")
 
-                haveClock.visibility = if(note.note.noteReminder != null) View.VISIBLE else View.GONE
+                haveClock.visibility = if(note.note.noteReminder != null && !note.note.noteReminder!!.dateExpired()) View.VISIBLE else View.GONE
 
 
                 recordRecycler.layoutManager = LinearLayoutManager(this@NoteDetailActivity)
@@ -271,10 +283,17 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
         val pixels = getPixels(resource)
         val textColor = Color.valueOf(binding.noteContent.currentTextColor)
         val pixelColor = Color.valueOf(getWorstContrastColorInImage(textColor, pixels))
-        val optimalOpacity = findOptimalOverlayOpacity(textColor, pixelColor, Color.valueOf(Color.WHITE))
-        //binding.root.overlay.add(ColorDrawable(Color.BLACK))
-        binding.main.setBackgroundColor(Color.valueOf(255F, 255F, 255F, optimalOpacity.toFloat()).toArgb())
-        Log.d("opacity optimal", optimalOpacity.toString())
+        //binding.root.overlay.add(ColorDrawable(Color.BLACK))v
+        when (isDark) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                val optimalOpacity = findOptimalOverlayOpacity(textColor, pixelColor, Color.valueOf(Color.WHITE))
+                binding.main.setBackgroundColor(Color.valueOf(255F, 255F, 255F, optimalOpacity.toFloat()).toArgb())
+            } // Night mode is not active, we're using the light theme
+            Configuration.UI_MODE_NIGHT_YES -> {
+                val optimalOpacity = findOptimalOverlayOpacity(textColor, pixelColor, Color.valueOf(Color.BLACK))
+                binding.main.setBackgroundColor(Color.valueOf(0F, 0F, 0F, optimalOpacity.toFloat()).toArgb())
+            } // Night mode is active, we're using dark theme
+        }
         Log.d("opacity textColor", textColor.toString())
     }
 
@@ -290,8 +309,11 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
     }
 
     override fun returnString(item: Uri?) {
-        noteWithFolders?.note?.noteBg = item.toString()
-        noteWithFolders?.note?.let { noteViewModel.updateNote(it) }
+        noteWithFolders!!.note.let {
+            it.noteBg = item.toString()
+            Log.d("bg_issue", "bag in return String is ${it.noteBg}")
+            noteViewModel.updateNote(it)
+        }
         Glide
             .with(applicationContext)
             .load(item)
@@ -309,6 +331,19 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
                 }
 
             })
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        when (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                isDark = Configuration.UI_MODE_NIGHT_NO
+            } // Night mode is not active, we're using the light theme
+            Configuration.UI_MODE_NIGHT_YES -> {
+                isDark = Configuration.UI_MODE_NIGHT_YES
+            } // Night mode is active, we're using dark theme
+        }
     }
 
 }

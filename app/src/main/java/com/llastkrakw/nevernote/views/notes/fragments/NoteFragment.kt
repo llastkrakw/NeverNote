@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -86,6 +87,18 @@ class NoteFragment : Fragment() {
             noteViewModel.isGrid.observe(viewLifecycleOwner, { isGrid ->
                 isLinearLayoutManager = isGrid
                 chooseLayoutManager()
+            })
+
+            noteViewModel.isClear.observe(viewLifecycleOwner,  {
+                Log.d("clear_bug", "selection was clear is $it")
+                if(it)
+                    noteAdapter.notifyDataSetChanged()
+            })
+
+            noteViewModel.allNoteSelected.observe(viewLifecycleOwner,  {
+                Log.d("clear_bug", "all notes selected $it")
+                if(it)
+                    noteAdapter.notifyDataSetChanged()
             })
 
             noteToggle.setOnClickListener {
