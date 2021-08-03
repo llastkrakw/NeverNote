@@ -51,8 +51,8 @@ usually `~/app/build.gradle` in the project's root folder:
   - [Room](https://developer.android.com/topic/libraries/architecture/room) - SQLite object mapping library.
   - [Data Binding](https://developer.android.com/topic/libraries/data-binding/) - Declaratively bind observable data to UI elements.
   - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) - Jetpack DataStore is a data storage solution that allows you to store key-value pairs or typed objects with protocol buffers. DataStore uses Kotlin coroutines and Flow to store data asynchronously, consistently, and transactionally.
-  - [Audio Recording](https://developer.android.com/guide/topics/media) - Record and play audio with android framework.
 - [Material Components for Android](https://github.com/material-components/material-components-android) - Modular and customizable Material Design UI components for Android.
+- [Audio Recording](https://developer.android.com/guide/topics/media) - Record and play audio with android framework.
 
 ### Package Structure 📦
 
