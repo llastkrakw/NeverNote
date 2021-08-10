@@ -1,18 +1,13 @@
 package com.llastkrakw.nevernote.core.utilities
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.text.*
-import android.text.method.LinkMovementMethod
 import android.text.style.*
-import android.text.util.Linkify
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.text.getSpans
 import androidx.core.text.toHtml
-import androidx.core.text.toSpannable
 
 
 class SpanUtils {
@@ -66,20 +61,14 @@ fun url(url: String, s: SpannableString, editText: EditText) = span(s, URLSpan(u
 fun normal(s: CharSequence, editText: EditText) = span(s, SpannableString(s), editText)
 fun normal(s: SpannableString, editText: EditText) = span(s, SpannableString(s), editText)
 
-fun convertToBulletList(stringList: List<String>): CharSequence {
-    val spannableStringBuilder = SpannableStringBuilder()
-    stringList.forEachIndexed { index, text ->
-        val line: CharSequence = text + if (index < stringList.size - 1) "\n" else ""
-        val spannable: Spannable = SpannableString(line)
-        spannable.setSpan(
-            BulletSpan(15, Color.GREEN),
-            0,
-            spannable.length,
-            Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-        )
-        spannableStringBuilder.append(spannable)
-    }
-    return spannableStringBuilder
+fun convertToBulletList(stringList: List<String>, value: String): String {
+
+    var finalValue  = value
+
+    for (str in stringList)
+        finalValue = finalValue.replaceFirst(str, "&#128995; $str </br>")
+
+    return finalValue
 }
 
 fun spanUnderline(editText: EditText) {

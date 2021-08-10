@@ -6,11 +6,11 @@ import android.content.ContentValues
 import android.content.Intent
 import android.media.MediaRecorder
 import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Environment
 import android.os.IBinder
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media
-import android.util.Log
 import android.widget.Toast
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
@@ -28,7 +28,8 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.util.*
 
-class RecorderService : Service() {
+
+class RecorderService : Service(), MediaScannerConnection.MediaScannerConnectionClient {
     private val AMPLITUDE_UPDATE_MS = 75L
 
     private var currFilePath = ""
@@ -37,6 +38,7 @@ class RecorderService : Service() {
     private var durationTimer = Timer()
     private var amplitudeTimer = Timer()
     private var recorder: MediaRecorder? = null
+    private lateinit var mediaScanner :  MediaScannerConnection
 
     private val noteRepository : NoteRepository by lazy {
         (application as NeverNoteApplication).noteRepository
@@ -57,17 +59,16 @@ class RecorderService : Service() {
             GET_RECORDER_INFO -> broadcastRecorderInfo()
             STOP_AMPLITUDE_UPDATE -> amplitudeTimer.cancel()
             TOGGLE_PAUSE -> togglePause()
-            CANCEL_RECORDING -> stopRecording(true)
+            CANCEL_RECORDING -> stopRecording(isCancel!!)
             else -> startRecording()
         }
 
         return START_NOT_STICKY
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
-        isCancel?.let { stopRecording(it) }
+        stopRecording(false)
     }
 
     // mp4 output format with aac encoding should produce good enough m4a files according to https://stackoverflow.com/a/33054794/1967672
@@ -127,6 +128,7 @@ class RecorderService : Service() {
         recorder?.apply {
             try {
                 stop()
+                reset()
                 release()
 
                 if (!isCancel)
@@ -138,13 +140,11 @@ class RecorderService : Service() {
                         }
                         EventBus.getDefault().post(Events.RecordingCompleted())
                     }
-
-                else
-                    this@RecorderService.onDestroy()
             } catch (e: Exception) {
                 showErrorToast(e)
             }
         }
+
         recorder = null
     }
 
@@ -207,13 +207,8 @@ class RecorderService : Service() {
     }
 
     private fun addFileInLegacyMediaStore() {
-        MediaScannerConnection.scanFile(
-            this,
-            arrayOf(currFilePath),
-            arrayOf(currFilePath.getMimeType())
-        ) { _, _ -> GlobalScope.launch(Dispatchers.IO) {
-            recordingSavedSuccessfully(true)
-        } }
+        mediaScanner = MediaScannerConnection(applicationContext, this)
+        mediaScanner.connect()
     }
 
     private suspend fun recordingSavedSuccessfully(showFilenameOnly: Boolean) {
@@ -254,4 +249,18 @@ class RecorderService : Service() {
     private fun broadcastStatus() {
         EventBus.getDefault().post(Events.RecordingStatus(status))
     }
+
+    override fun onScanCompleted(path: String?, uri: Uri?) {
+        GlobalScope.launch(Dispatchers.IO) {
+            recordingSavedSuccessfully(true)
+        }
+    }
+
+    override fun onMediaScannerConnected() {
+        mediaScanner.scanFile(
+            currFilePath,
+            currFilePath.getMimeType()
+        )
+    }
+
 }

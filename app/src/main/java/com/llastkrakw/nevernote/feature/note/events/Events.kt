@@ -5,4 +5,5 @@ class Events {
     class RecordingStatus internal constructor(val status: Int)
     class RecordingAmplitude internal constructor(val amplitude: Int)
     class RecordingCompleted internal constructor()
+    class RecordingCanceled internal constructor()
 }

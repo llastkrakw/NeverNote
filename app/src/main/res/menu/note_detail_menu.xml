@@ -27,10 +27,10 @@
         android:title="@string/reminder" />
 
 
-    <item
+<!--    <item
         android:id="@+id/action_to_screen"
         android:enabled="true"
-        android:title="@string/place_on_home_screen" />
+        android:title="@string/place_on_home_screen" />-->
 
     <item
         android:id="@+id/action_delete"

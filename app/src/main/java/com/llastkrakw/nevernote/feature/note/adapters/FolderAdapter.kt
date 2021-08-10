@@ -13,7 +13,6 @@ import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.views.notes.activities.FolderDetailActivity
-import java.util.*
 
 class FolderAdapter(private val noteViewModel: NoteViewModel, private val owner: LifecycleOwner) : ListAdapter<FolderWithNotes, FolderAdapter.FolderViewHolder>(FoldersComparator()) {
 

@@ -19,7 +19,6 @@ import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -37,7 +36,6 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.llastkrakw.nevernote.MainActivity
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.extension.*
@@ -99,29 +97,10 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
     private var recordAdapter : RecordAdapter = RecordAdapter()
 
 
-    companion object {
-        // dummy request code to identify the request
-        //private const val IMAGE_REQUEST_CODE = 123
-        const val EXTRA_NOTE = "com.llastkrakw.nevernote.new.note"
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         @Suppress("DEPRECATION")
         super.onActivityResult(requestCode, resultCode, data)
         imagePicker.onActivityResult(requestCode, resultCode, data)
-/*        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_REQUEST_CODE) {
-            // getting the photos
-            val photos: ArrayList<UnsplashPhoto>? = data?.getParcelableArrayListExtra(
-                UnsplashPickerActivity.EXTRA_PHOTOS
-            )
-            val photo : UnsplashPhoto? = photos?.first()
-            Log.d("Photo", photo?.urls.toString())
-            // showing the preview
-            if (photo != null) {
-                note.noteBg = photo.urls.small
-                picassoLoader(binding.root, photo.urls.small)
-            }
-        }*/
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -205,8 +184,8 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             editTextNoteContent.addTextChangedListener(recreateMenuWatcher)
 
             if(noteForUpdate != null){
-                editTextNoteContent.setText(toSpannable(noteForUpdate!!.note.noteContent))
-                editTextNoteTitle.setText(toSpannable(noteForUpdate!!.note.noteTitle))
+                editTextNoteContent.setText(toSpannable(noteForUpdate!!.note.noteContent), TextView.BufferType.SPANNABLE)
+                editTextNoteTitle.setText(toSpannable(noteForUpdate!!.note.noteTitle), TextView.BufferType.SPANNABLE)
             }
 
             enableStyle()
@@ -282,6 +261,14 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                             editor.setColor(color)
                         }
                         .show()
+            }
+
+            addBullet.setOnClickListener {
+                if (editTextNoteContent.selectionStart != editTextNoteContent.selectionEnd)
+                    editor.makeBulletList(editTextNoteContent.text.subSequence(
+                        editTextNoteContent.selectionStart,
+                        editTextNoteContent.selectionEnd
+                    ).split(" ").map { it.trim() })
             }
 
             addLink.setOnClickListener {
@@ -366,7 +353,6 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                 Log.d("note_update", "in add ${noteForUpdate!!.note.noteId}")
                 noteForUpdate!!.note.noteTitle = binding.editTextNoteTitle.text.toHtml()
                 noteForUpdate!!.note.noteContent = binding.editTextNoteContent.text.toHtml()
-                toast("note ${noteForUpdate!!.note.noteId}", Toast.LENGTH_LONG)
                 replyIntent.putExtra(NOTE_UPDATE_EXTRA, noteForUpdate)
                 setResult(Activity.RESULT_OK, replyIntent)
             }
@@ -374,8 +360,8 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                 if (!(TextUtils.isEmpty(binding.editTextNoteContent.text) && TextUtils.isEmpty(binding.editTextNoteTitle.text))) {
                     note.noteTitle = binding.editTextNoteTitle.text.toHtml()
                     note.noteContent = binding.editTextNoteContent.text.toHtml()
-                    toast("note ${note.noteId}", Toast.LENGTH_LONG)
                     noteViewModel.updateNote(note)
+                    Log.d("note_body", "noteBody ${binding.editTextNoteContent.text.toHtml()}")
                 }
             }
             onBackPressed()
@@ -390,6 +376,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        noteViewModel.deleteNote(note)
         onBackPressed()
         return true
     }
@@ -515,5 +502,4 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
            binding.editTextNoteContent.setText(it, TextView.BufferType.EDITABLE)
         }
     }
-
 }

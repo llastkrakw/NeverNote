@@ -202,7 +202,9 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
         }
         else {
             for (item in completeList) {
-                if (item.noteContent.toLowerCase(Locale.ROOT).contains(constraint.toString().toLowerCase(Locale.ROOT)) || item.noteTitle.toLowerCase(Locale.ROOT).contains(constraint.toString().toLowerCase(Locale.ROOT))) {
+                if (item.noteContent.lowercase(Locale.ROOT).contains(constraint.toString()
+                        .lowercase(Locale.ROOT)) || item.noteTitle.lowercase(Locale.ROOT)
+                        .contains(constraint.toString().lowercase(Locale.ROOT))) {
                     filteredList.add(item)
                 }
             }

@@ -6,14 +6,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.text.BoringLayout
+import android.transition.Explode
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -25,7 +25,6 @@ import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import com.llastkrakw.nevernote.views.notes.activities.SearchNoteActivity
-import kotlin.properties.Delegates
 
 
 class NoteFragment : Fragment() {
@@ -53,6 +52,7 @@ class NoteFragment : Fragment() {
                 getString(R.string.note_channel_id),
                 getString(R.string.note_channel_name)
         )
+
         return binding.root
     }
 

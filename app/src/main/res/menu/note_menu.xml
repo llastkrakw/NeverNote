@@ -2,9 +2,16 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_switch_layout"
+        android:id="@+id/logo"
         android:enabled="true"
         android:icon="@drawable/ic_logo"
-        android:title="@string/action_switch"
+        android:title="@string/logo"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_switch_layout"
+        android:enabled="true"
+        android:icon="@drawable/ic_list"
+        android:title="@string/action_switch"
+        app:showAsAction="ifRoom" />
 </menu>

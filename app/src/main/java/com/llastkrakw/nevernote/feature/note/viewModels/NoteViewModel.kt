@@ -12,11 +12,13 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.AlarmManagerCompat
+import androidx.core.text.toSpannable
 import androidx.lifecycle.*
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_EXTRA
 import com.llastkrakw.nevernote.core.constants.getAudioFileContentUri
 import com.llastkrakw.nevernote.core.constants.isQPlus
 import com.llastkrakw.nevernote.core.extension.*
+import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
 import com.llastkrakw.nevernote.core.utilities.marshallParcelable
 import com.llastkrakw.nevernote.feature.note.datas.entities.*
 import com.llastkrakw.nevernote.feature.note.receiver.NoteAlarmReceiver
@@ -85,14 +87,14 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
             emit(id)
         }
         Log.d("note_update", "note ${note.noteTitle} was added")
-        app.toast("note ${note.noteId} was added")
+        app.toast("note ${toSpannable(note.noteTitle)} was added")
     }
 
 
     fun updateNote(note: Note) = viewModelScope.launch {
         Log.d("note_update", note.noteContent)
         noteRepository.updateNote(note)
-        app.toast("note ${note.noteId} was update")
+        app.toast("note ${toSpannable(note.noteTitle)} was update")
     }
 
 
@@ -107,7 +109,8 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
     fun deleteNote(note: Note) = viewModelScope.launch {
         noteRepository.deleteNote(note)
 
-        app.toast("note ${note.noteId} was deleted")
+        if(note.noteId != null)
+            app.toast("note ${toSpannable(note.noteTitle)} was deleted")
     }
 
     fun selectNote(note: Note){
@@ -118,7 +121,7 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
             Log.d("multi", "notes ${it.size}")
         }
         _isClear.postValue(false)
-        app.toast("note ${note.noteId} was selected")
+        app.toast("note ${toSpannable(note.noteTitle)} was selected")
     }
 
     fun selectAll(){
@@ -130,14 +133,14 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
             }
         }
         _allNoteSelected.postValue(true)
-        app.toast("All notes selected")
+        app.toast("All notes was selected")
     }
 
     fun deselectAll(){
         _selectedNotes.value?.clear()
         _isClear.postValue(true)
         _allNoteSelected.postValue(false)
-        app.toast("All notes deselected")
+        app.toast("All notes was deselected")
     }
 
     fun deselectNote(note: Note){
@@ -147,7 +150,7 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
                 it.remove(note)
             Log.d("multi", "notes ${it.size}")
         }
-        app.toast("note ${note.noteId} was deselected")
+        app.toast("note ${toSpannable(note.noteTitle)} was deselected")
     }
 
 

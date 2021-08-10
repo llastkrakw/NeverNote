@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.transition.Explode
 import android.util.Log
 import android.view.*
 import android.widget.EditText
@@ -14,6 +15,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,13 +57,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<*>
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //setUpWindowAnimations()
 
         setSupportActionBar(binding.myToolbar)
         supportActionBar?.title = ""
@@ -120,6 +123,7 @@ class MainActivity : AppCompatActivity() {
             sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         }
+
     }
 
 
@@ -130,6 +134,14 @@ class MainActivity : AppCompatActivity() {
             when(it.isEmpty()){
                 true -> {
                     menuInflater.inflate(R.menu.note_menu, menu)
+                    (noteViewModel.isGrid.value!!).let { isGrid ->
+                        val item = menu?.findItem(R.id.action_switch_layout)
+                        if (isGrid)
+                            item?.icon = ContextCompat.getDrawable(this, R.drawable.ic_list)
+                        else
+                            item?.icon = ContextCompat.getDrawable(this, R.drawable.ic_grid)
+                        invalidateOptionsMenu()
+                    }
                     invalidateOptionsMenu()
                 }
                 false -> {
@@ -144,7 +156,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_switch_layout -> {
-            showMenuDialog()
+            (noteViewModel.isGrid.value!!).let {
+                noteViewModel.toggleLayoutNoteManager(!it)
+            }
             true
         }
 
@@ -231,31 +245,6 @@ class MainActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    private fun showMenuDialog(){
-
-        val items = arrayOf<CharSequence>("ListView", "GridView", "Setting")
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setItems(items
-        ) { _, selected ->
-            when (selected) {
-                1 -> noteViewModel.toggleLayoutNoteManager(true)
-                0 -> noteViewModel.toggleLayoutNoteManager(false)
-            }
-        }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val wmlp: WindowManager.LayoutParams = dialog.window!!.attributes
-
-        wmlp.gravity = Gravity.TOP or Gravity.END
-        wmlp.x = 100 //x position
-
-        wmlp.y = 100 //y position
-
-
-        dialog.show()
-        dialog.window!!.setLayout(650, 550)
-    }
 
     override fun onBackPressed() {
         if (viewPager.currentItem == 0) {
@@ -271,9 +260,18 @@ class MainActivity : AppCompatActivity() {
 
         override fun createFragment(position: Int): Fragment{
 
-            if(position == 0)
-                return NoteFragment.newInstance()
-            return TaskFragment.newInstance()
+            val slide = Explode().setDuration(2000)
+
+            if(position == 0){
+                val noteFragment = NoteFragment.newInstance()
+                noteFragment.exitTransition = slide
+                return noteFragment
+            }
+
+            val taskFragment = TaskFragment.newInstance()
+            taskFragment.exitTransition = slide
+
+            return taskFragment
         }
 
     }
@@ -337,4 +335,5 @@ class MainActivity : AppCompatActivity() {
             sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
         }
     }
+
 }
