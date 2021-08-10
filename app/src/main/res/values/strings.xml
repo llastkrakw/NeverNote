@@ -56,4 +56,6 @@
     <string name="add_new_folder">Add new folder</string>
     <string name="nothing_to_show_there">Nothing to show there !</string>
     <string name="have_background">have background</string>
+    <string name="logo">logo</string>
+    <string name="convert_to_bullet_list">convert to bullet list</string>
 </resources>

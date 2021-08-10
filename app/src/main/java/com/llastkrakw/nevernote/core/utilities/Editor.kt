@@ -1,10 +1,10 @@
 package com.llastkrakw.nevernote.core.utilities
 
 import android.text.*
-import android.text.method.BaseMovementMethod
 import android.text.style.URLSpan
 import android.util.Log
 import android.widget.EditText
+import android.widget.TextView
 import androidx.core.text.toHtml
 import androidx.core.text.toSpannable
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
@@ -248,6 +248,17 @@ class Editor(@NotNull private var editText: EditText){
        string.setSpan(URLSpan(url.toString()), editText.selectionStart, editText.selectionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
        editText.setText(TextUtils.concat(string, " "))
    }
+
+    fun makeBulletList(stringList: List<String>){
+/*        val string = SpannableString(state.content)
+        string.setSpan(
+            BulletSpan(40, Color.GREEN),
+            editText.selectionStart, editText.selectionEnd,
+            Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+        )*/
+
+        editText.setText(toSpannable(convertToBulletList(stringList, editText.text.toHtml())), TextView.BufferType.SPANNABLE)
+    }
 
    fun alignRight(){
        spanAlignmentRight(editText)

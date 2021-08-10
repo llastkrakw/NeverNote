@@ -11,9 +11,12 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.utilities.SwipeCallback
 import com.llastkrakw.nevernote.databinding.ActivitySearchTaskBinding
 import com.llastkrakw.nevernote.feature.task.adapters.TaskAdapter
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
@@ -33,6 +36,7 @@ class SearchTaskActivity : AppCompatActivity() {
 
         binding = ActivitySearchTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         taskAdapter = TaskAdapter(taskViewModel, this)
 
@@ -69,6 +73,18 @@ class SearchTaskActivity : AppCompatActivity() {
                 it.text.clear()
                 it.compoundDrawables[2] = null
             }
+
+            val swipeCompleteCallback = object : SwipeCallback(this@SearchTaskActivity){
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.absoluteAdapterPosition
+                    val task = taskAdapter.currentList[position]
+                    taskViewModel.deleteTask(task)
+                }
+            }
+
+            val completeTouch  = ItemTouchHelper(swipeCompleteCallback)
+
+            completeTouch.attachToRecyclerView(taskRecycler)
 
         }
     }

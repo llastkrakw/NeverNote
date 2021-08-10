@@ -56,10 +56,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/edit_text_note_content"
+                    android:cursorVisible="true"
                     android:autoLink="all"
                     android:minLines="1"
-                    android:gravity="start|end"
-                    android:maxLines="2000"
                     android:scrollbars="vertical"
                     android:padding="10dp"
                     android:paddingStart="20dp"
@@ -120,13 +119,13 @@
                  app:layout_constraintStart_toStartOf="parent">
 
                  <ImageView
-                     android:id="@+id/add_drawing"
+                     android:id="@+id/add_bullet"
                      android:layout_width="24dp"
                      android:layout_height="24dp"
-                     android:src="@drawable/ic_illustrator"
+                     android:src="@drawable/ic_bullet_list"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="20dp"
-                     android:contentDescription="@string/add_shape"/>
+                     android:contentDescription="@string/convert_to_bullet_list"/>
 
                  <ImageView
                      android:id="@+id/add_recorder"
@@ -170,7 +169,7 @@
                      android:layout_height="24dp"
                      android:layout_marginStart="12dp"
                      android:layout_marginEnd="12dp"
-                     android:src="@drawable/ic_add_link"
+                     android:src="@drawable/ic_sentence_case"
                      android:contentDescription="@string/modify_text"/>
 
              </LinearLayout>

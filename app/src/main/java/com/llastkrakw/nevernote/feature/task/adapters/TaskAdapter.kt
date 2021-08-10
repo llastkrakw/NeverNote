@@ -54,9 +54,11 @@ class TaskAdapter(private val taskViewModel: TaskViewModel, private val owner: L
 
             haveClock.visibility = if(task.taskReminder != null && !task.taskReminder!!.dateExpired()) View.VISIBLE else View.GONE
 
-            status.setOnCheckedChangeListener { _, isChecked ->
-                task.taskStatus = isChecked
-                taskViewModel.updateTask(task)
+            status.setOnClickListener {
+                (it as CheckBox).isChecked.let { isChecked ->
+                    task.taskStatus = isChecked
+                    taskViewModel.updateTask(task)
+                }
             }
         }
 

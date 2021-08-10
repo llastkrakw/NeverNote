@@ -88,13 +88,11 @@ class RecordDialogFragment : DialogFragment() {
 
         cancelButton.setOnClickListener {
             stopRecording(true)
-            status = RECORDING_STOPPED
             alertDialog.cancel()
         }
 
         finishButton.setOnClickListener {
             stopRecording(false)
-            status = RECORDING_STOPPED
             alertDialog.cancel()
         }
 
@@ -103,21 +101,23 @@ class RecordDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        bus = EventBus.getDefault()
-        bus!!.register(this)
+        if (!EventBus.getDefault().hasSubscriberForEvent(RecordDialogFragment::class.java)) {
+            bus = EventBus.getDefault()
+            bus!!.register(this)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        stopRecording(true)
-        pauseBlinkTimer.cancel()
+        bus!!.unregister(this)
     }
 
 
 
     override fun onStop() {
         super.onStop()
-        bus?.unregister(this)
+        pauseBlinkTimer.cancel()
+        bus!!.unregister(this)
     }
 
     private fun updateRecordingDuration(duration: Int) {

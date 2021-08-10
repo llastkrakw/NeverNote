@@ -73,7 +73,7 @@ fun Context.getStorageDirectories(): Array<String> {
         if (TextUtils.isEmpty(rawUserId)) {
             paths.add(rawEmulatedStorageTarget!!)
         } else {
-            paths.add(rawEmulatedStorageTarget + File.separator + rawUserId)
+            paths.add(rawEmulatedStorageTarget!! + File.separator + rawUserId)
         }
     }
 

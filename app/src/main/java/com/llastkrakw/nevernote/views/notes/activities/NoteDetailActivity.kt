@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
+import android.transition.Fade
 import android.util.Log
 import android.view.*
 import android.widget.TextView
@@ -29,7 +30,6 @@ import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_EXTRA
 import com.llastkrakw.nevernote.core.extension.dateExpired
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
-import com.llastkrakw.nevernote.core.utilities.ViewUtils
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.findOptimalOverlayOpacity
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getPixels
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getWorstContrastColorInImage
@@ -89,10 +89,12 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         super.onCreate(savedInstanceState)
 
         binding = ActivityNoteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setUpWindowAnimations()
         binding.lifecycleOwner = this
 
         isDark = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
@@ -346,4 +348,8 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
         }
     }
 
+    private fun setUpWindowAnimations(){
+        val slide = Fade().setDuration(1000)
+        window.enterTransition = slide
+    }
 }

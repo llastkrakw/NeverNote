@@ -6,6 +6,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         style="@style/Theme.NeverNote.Background">
 
         <ScrollView
@@ -28,6 +29,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="40dp"
                     />
 
 
@@ -90,7 +92,7 @@
                     android:lineSpacingExtra="5dp"
                     android:padding="15dp"
                     android:textAlignment="viewStart"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"

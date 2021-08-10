@@ -6,7 +6,7 @@
     android:padding="12dp"
     android:layout_margin="12dp"
     app:cardCornerRadius="12dp"
-    app:contentPadding="5dp"
+    app:contentPadding="8dp"
     app:cardBackgroundColor="@color/search_button_color">
 
     <androidx.constraintlayout.widget.ConstraintLayout

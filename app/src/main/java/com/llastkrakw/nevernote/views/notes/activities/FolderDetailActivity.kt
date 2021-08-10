@@ -1,25 +1,35 @@
 package com.llastkrakw.nevernote.views.notes.activities
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
-import com.llastkrakw.nevernote.core.extension.toast
 import com.llastkrakw.nevernote.databinding.ActivityFolderDetailBinding
+import com.llastkrakw.nevernote.feature.note.adapters.AddFolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.FolderAdapter.Companion.EXTRA_FOLDER
 import com.llastkrakw.nevernote.feature.note.adapters.OtherNoteAdapter
+import com.llastkrakw.nevernote.feature.note.datas.entities.Folder
 import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import java.text.DateFormat
+import java.util.*
 
 class FolderDetailActivity : AppCompatActivity() {
 
@@ -30,7 +40,13 @@ class FolderDetailActivity : AppCompatActivity() {
         NoteViewModelFactory((application as NeverNoteApplication).noteRepository, application)
     }
 
+    private lateinit var addFolderAdapter : AddFolderAdapter
     private lateinit var  noteAdapter : OtherNoteAdapter
+
+    private lateinit var folderRecyclerView: RecyclerView
+    private lateinit var layoutBottomSheet: LinearLayout
+    private lateinit var sheetBehavior: BottomSheetBehavior<*>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -85,6 +101,39 @@ class FolderDetailActivity : AppCompatActivity() {
                     if(it)
                         noteAdapter.notifyDataSetChanged()
                 })*/
+
+                addFolderAdapter = AddFolderAdapter(noteViewModel, this@FolderDetailActivity)
+
+                folderRecyclerView = addFolderBottomSheet.recyclerFolder
+                folderRecyclerView.adapter = addFolderAdapter
+                folderRecyclerView.layoutManager = LinearLayoutManager(this@FolderDetailActivity, LinearLayoutManager.VERTICAL, true)
+
+                noteViewModel.allFolderWithNotes.observe(this@FolderDetailActivity,{ folders ->
+                    folders?.let {
+                        addFolderAdapter.submitList(it)
+                    }
+                })
+
+
+                addFolderBottomSheet.addFolderButton.setOnClickListener {
+                    showAddFolderDialog()
+                }
+
+                layoutBottomSheet = addFolderBottomSheet.folderBottomSheet
+                sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet)
+                sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+                noteViewModel.isClear.observe(this@FolderDetailActivity,  {
+                    Log.d("clear_bug", "selection was clear is $it")
+                    if(it)
+                        noteAdapter.notifyDataSetChanged()
+                })
+
+                noteViewModel.allNoteSelected.observe(this@FolderDetailActivity,  {
+                    Log.d("clear_bug", "all notes selected $it")
+                    if(it)
+                        noteAdapter.notifyDataSetChanged()
+                })
 
             }
 
@@ -149,12 +198,50 @@ class FolderDetailActivity : AppCompatActivity() {
         }
 
         R.id.action_folder_note ->{
-            toast("now you cannot do this there")
+            toggleBottomSheet()
             true
         }
 
         else ->{
              super.onOptionsItemSelected(item)
         }
+    }
+
+
+    private fun toggleBottomSheet() {
+        if (sheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+        } else {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN)
+        }
+    }
+
+    private fun showAddFolderDialog(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val folderView = layoutInflater.inflate(R.layout.add_folder, null)
+
+        builder.setView(folderView)
+        val alertDialog = builder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val editText = folderView.findViewById<EditText>(R.id.add_folder_edit_text)
+        val addButton = folderView.findViewById<TextView>(R.id.button_add_folder)
+        val cancelButton = folderView.findViewById<TextView>(R.id.add_folder_cancel)
+
+        addButton.setOnClickListener {
+            editText.text?.let {
+                if(it.toString().isNotEmpty()){
+                    val folder = Folder(null, it.toString(), Date())
+                    noteViewModel.insertFolder(folder)
+                    alertDialog.cancel()
+                }
+            }
+        }
+
+        cancelButton.setOnClickListener {
+            alertDialog.cancel()
+        }
+
+        alertDialog.show()
     }
 }
