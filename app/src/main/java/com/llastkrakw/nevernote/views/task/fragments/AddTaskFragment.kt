@@ -12,6 +12,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.SUCCESS_SONG
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
+import com.llastkrakw.nevernote.core.extension.toast
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModelFactory
@@ -45,6 +49,7 @@ class AddTaskFragment : DialogFragment() {
 
         reminderButton.setOnClickListener {
             editText.text?.let { str ->
+                context?.playUiSong(TAP_SONG)
                 if (str.toString().isNotEmpty()){
                     //activity?.supportFragmentManager?.let { manager -> TaskTimerPickerFragment(taskViewModel, str.toString(), alertDialog).show(manager, "Task reminder") }
                     val reminderIntent = Intent(context, TaskCalendarView::class.java)
@@ -52,14 +57,22 @@ class AddTaskFragment : DialogFragment() {
                     startActivity(reminderIntent)
                     alertDialog.cancel()
                 }
+                else{
+                    context?.toast("Task doesn't be empty to set reminder")
+                }
             }
         }
 
         addButton.setOnClickListener {
+            context?.playUiSong(TAP_SONG)
             editText.text?.let {
                 if(it.toString().isNotEmpty()){
+                    context?.playUiSong(SUCCESS_SONG)
                     taskViewModel.insertTask(Task(null, it.toString(), Date(), null, false), null)
                     alertDialog.cancel()
+                }
+                else{
+                    context?.toast("Task doesn't be empty")
                 }
             }
         }

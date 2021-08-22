@@ -20,6 +20,12 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.BACK_SONG
+import com.llastkrakw.nevernote.core.constants.DELETE_SONG
+import com.llastkrakw.nevernote.core.constants.SUCCESS_SONG
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
+import com.llastkrakw.nevernote.core.extension.toast
 import com.llastkrakw.nevernote.databinding.ActivityFolderDetailBinding
 import com.llastkrakw.nevernote.feature.note.adapters.AddFolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.FolderAdapter.Companion.EXTRA_FOLDER
@@ -116,6 +122,7 @@ class FolderDetailActivity : AppCompatActivity() {
 
 
                 addFolderBottomSheet.addFolderButton.setOnClickListener {
+                    this@FolderDetailActivity.playUiSong(TAP_SONG)
                     showAddFolderDialog()
                 }
 
@@ -142,6 +149,7 @@ class FolderDetailActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        this.playUiSong(BACK_SONG)
         onBackPressed()
         finish()
         return true
@@ -168,6 +176,7 @@ class FolderDetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when(item.itemId){
         R.id.action_delete_folder ->{
+            this.playUiSong(DELETE_SONG)
             folderWithNotes?.let { noteViewModel.deleteFolder(it.folder) }
             onBackPressed()
             finish()
@@ -175,6 +184,7 @@ class FolderDetailActivity : AppCompatActivity() {
         }
 
         R.id.action_delete_note ->{
+            this.playUiSong(DELETE_SONG)
             Log.d("multi", "delete note")
             noteViewModel.selectedNotes.observe(this, { selectedNotes ->
                 noteAdapter.submitList(folderWithNotes!!.notes.filter {
@@ -192,12 +202,14 @@ class FolderDetailActivity : AppCompatActivity() {
                 else
                     noteViewModel.selectAll()
             }*/
+            this.playUiSong(TAP_SONG)
             noteViewModel.selectAll()
             Log.d("multi", "selected all")
             true
         }
 
         R.id.action_folder_note ->{
+            this.playUiSong(DELETE_SONG)
             toggleBottomSheet()
             true
         }
@@ -229,16 +241,22 @@ class FolderDetailActivity : AppCompatActivity() {
         val cancelButton = folderView.findViewById<TextView>(R.id.add_folder_cancel)
 
         addButton.setOnClickListener {
+            this.playUiSong(TAP_SONG)
             editText.text?.let {
                 if(it.toString().isNotEmpty()){
                     val folder = Folder(null, it.toString(), Date())
                     noteViewModel.insertFolder(folder)
+                    this.playUiSong(SUCCESS_SONG)
                     alertDialog.cancel()
+                }
+                else{
+                    toast("You can't add empty folder !")
                 }
             }
         }
 
         cancelButton.setOnClickListener {
+            this.playUiSong(TAP_SONG)
             alertDialog.cancel()
         }
 

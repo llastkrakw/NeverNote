@@ -17,6 +17,8 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.databinding.ActivityNoteCalendarViewBinding
 import com.llastkrakw.nevernote.databinding.CalendarDayLayoutBinding
 import com.llastkrakw.nevernote.databinding.CalendarMonthHeaderLayoutBinding
@@ -109,6 +111,7 @@ class TaskCalendarView : AppCompatActivity() {
         calendarView.smoothScrollToMonth(currentMonth)
 
         binding.validateDate.setOnClickListener {
+            this@TaskCalendarView.playUiSong(TAP_SONG)
             if(selectedDate == null){
                 Toast.makeText(this, "Choose a date", Toast.LENGTH_LONG).show()
             }
@@ -135,6 +138,7 @@ class TaskCalendarView : AppCompatActivity() {
 
         init {
             view.setOnClickListener {
+                this@TaskCalendarView.playUiSong(TAP_SONG)
                 // Use the CalendarDay associated with this container.
                 // Check the day owner as we do not want to select in or out dates.
                 if (day.owner == DayOwner.THIS_MONTH && (day.date.toEpochDay() >= LocalDate.now().toEpochDay())) {

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.SUCCESS_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.views.notes.activities.FolderDetailActivity
@@ -52,6 +54,7 @@ class AddFolderAdapter(private val noteViewModel: NoteViewModel, private val own
 
         override fun onClick(v: View?) {
             noteViewModel.addNotesToFolder(currentFolderWithNotes)
+            v?.context?.playUiSong(SUCCESS_SONG)
         }
 
     }

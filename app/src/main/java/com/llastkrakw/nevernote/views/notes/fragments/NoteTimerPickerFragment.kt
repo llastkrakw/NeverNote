@@ -10,6 +10,8 @@ import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
+import com.llastkrakw.nevernote.core.constants.SUCCESS_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.feature.note.datas.entities.NoteWithFoldersAndRecords
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import java.time.Instant
@@ -41,10 +43,12 @@ class NoteTimePickerFragment(private val noteViewModel: NoteViewModel, private v
         Log.d("timer", date.toString())
         val reminder = LocalDate.ofEpochDay(date).atStartOfDay().plusMinutes(minute.toLong()).plusHours(hourOfDay.toLong()).toInstant(currentOffsetForMyZone).toEpochMilli()
         noteViewModel.addNoteReminder(note,  Date.from(Instant.ofEpochMilli(reminder)).time)
+        context?.playUiSong(SUCCESS_SONG)
         Log.d("timer", reminder.toString())
         Log.d("timer", Instant.now().toEpochMilli().toString())
         Log.d("timer", "result : ${reminder - System.currentTimeMillis()}")
         Toast.makeText(context, "Reminder was add to : ${Instant.ofEpochMilli(reminder)}", Toast.LENGTH_LONG).show()
+        activity?.onBackPressed()
 /*        val mainIntent = Intent(context, MainActivity::class.java)
         startActivity(mainIntent)*/
     }

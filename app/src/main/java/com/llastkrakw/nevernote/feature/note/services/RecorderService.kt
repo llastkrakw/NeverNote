@@ -218,6 +218,7 @@ class RecorderService : Service(), MediaScannerConnection.MediaScannerConnection
         if (newRecordRef != null) {
             noteRepository.insertRecordRef(newRecordRef)
         }
+        playUiSong(SUCCESS_SONG)
         toast(msg, Toast.LENGTH_LONG)
     }
 

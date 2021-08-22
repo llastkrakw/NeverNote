@@ -9,6 +9,8 @@ import android.util.Log
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
+import com.llastkrakw.nevernote.core.constants.SUCCESS_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import java.time.Instant
@@ -37,6 +39,7 @@ class TaskTimerPickerFragment(private val taskViewModel: TaskViewModel, private 
         val currentOffsetForMyZone = systemZone.rules.getOffset(instant)
         Log.d("timer", selectedDate.toString())
         val reminder = LocalDate.ofEpochDay(selectedDate).atStartOfDay().plusMinutes(minute.toLong()).plusHours(hourOfDay.toLong()).toInstant(currentOffsetForMyZone).toEpochMilli()
+        context?.playUiSong(SUCCESS_SONG)
         taskViewModel.insertTask(Task(null, taskContent, Date(), null,false),  Date.from(Instant.ofEpochMilli(reminder)).time)
         activity?.onBackPressed()
     }

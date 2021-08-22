@@ -24,6 +24,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.BACK_SONG
+import com.llastkrakw.nevernote.core.constants.DELETE_SONG
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
+import com.llastkrakw.nevernote.core.extension.toast
 import com.llastkrakw.nevernote.databinding.ActivitySearchNoteBinding
 import com.llastkrakw.nevernote.feature.note.adapters.AddFolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
@@ -63,6 +68,7 @@ class SearchNoteActivity : AppCompatActivity() {
         binding.apply {
 
             cancelSearchNote.setOnClickListener {
+                this@SearchNoteActivity.playUiSong(BACK_SONG)
                 onBackPressed()
             }
 
@@ -112,6 +118,7 @@ class SearchNoteActivity : AppCompatActivity() {
             })
 
             addFolderBottomSheet.addFolderButton.setOnClickListener {
+                playUiSong(TAP_SONG)
                 showAddFolderDialog()
             }
 
@@ -180,11 +187,13 @@ class SearchNoteActivity : AppCompatActivity() {
 
         R.id.action_delete_note ->{
             Log.d("multi", "delete note")
+            playUiSong(DELETE_SONG)
             noteViewModel.deleteNotes()
             true
         }
 
         R.id.action_select_all_note ->{
+            playUiSong(TAP_SONG)
             noteViewModel.allNoteSelected.value?.let{
                 if (it)
                     noteViewModel.deselectAll()
@@ -196,6 +205,7 @@ class SearchNoteActivity : AppCompatActivity() {
         }
 
         R.id.action_folder_note ->{
+            playUiSong(TAP_SONG)
             toggleBottomSheet()
             true
         }
@@ -220,16 +230,21 @@ class SearchNoteActivity : AppCompatActivity() {
         val cancelButton = folderView.findViewById<TextView>(R.id.add_folder_cancel)
 
         addButton.setOnClickListener {
+            this.playUiSong(TAP_SONG)
             editText.text?.let {
                 if(it.toString().isNotEmpty()){
                     val folder = Folder(null, it.toString(), Date())
                     noteViewModel.insertFolder(folder)
                     alertDialog.cancel()
                 }
+                else{
+                    toast("You can't add empty folder !")
+                }
             }
         }
 
         cancelButton.setOnClickListener {
+            this.playUiSong(TAP_SONG)
             alertDialog.cancel()
         }
 
