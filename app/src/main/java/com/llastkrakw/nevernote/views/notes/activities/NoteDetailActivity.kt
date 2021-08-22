@@ -17,7 +17,9 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.imagepickerlibrary.ImagePickerActivityClass
 import com.app.imagepickerlibrary.ImagePickerBottomsheet
 import com.app.imagepickerlibrary.bottomSheetActionCamera
@@ -27,9 +29,14 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.BACK_SONG
+import com.llastkrakw.nevernote.core.constants.DELETE_SONG
 import com.llastkrakw.nevernote.core.constants.NOTIFICATION_NOTE_EXTRA
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
 import com.llastkrakw.nevernote.core.extension.dateExpired
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
+import com.llastkrakw.nevernote.core.utilities.SwipeCallback
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.findOptimalOverlayOpacity
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getPixels
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getWorstContrastColorInImage
@@ -161,6 +168,24 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
 
                 recordRecycler.adapter = recordAdapter
 
+                val swipeCompleteCallback = object : SwipeCallback(this@NoteDetailActivity){
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        playUiSong(DELETE_SONG)
+                        noteViewModel.allRecordRef.observe(this@NoteDetailActivity, {
+                            val position = viewHolder.absoluteAdapterPosition
+                            val recording = recordAdapter.currentList[position]
+                            it.forEach { recordRef ->
+                                if(recordRef.recordTitle == recording.title){
+                                    noteViewModel.deleteRecordRef(recordRef)
+                                }
+                            }
+                        })
+                    }
+                }
+
+                val itemTouch = ItemTouchHelper(swipeCompleteCallback)
+                itemTouch.attachToRecyclerView(recordRecycler)
+
             }
 
         }
@@ -190,6 +215,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
 
 
     override fun onSupportNavigateUp(): Boolean {
+        this.playUiSong(BACK_SONG)
         onBackPressed()
         finish()
         return true
@@ -203,12 +229,14 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId){
 
         R.id.action_delete ->{
+            this.playUiSong(DELETE_SONG)
             noteWithFolders?.let { noteViewModel.deleteNote(it.note) }
             onBackPressed()
             finish()
             true
         }
         R.id.action_reminder ->{
+            this.playUiSong(TAP_SONG)
             noteWithFolders?.let {
                 //NoteTimePickerFragment(noteViewModel, it).show(supportFragmentManager, "Select hour of reminder")
                 val date = Intent(this, NoteCalendarView::class.java)
@@ -218,6 +246,7 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
             true
         }
         R.id.action_edit ->{
+            this.playUiSong(TAP_SONG)
             noteWithFolders?.let {
                 val updateIntent = Intent(this, AddNoteActivity::class.java)
                 updateIntent.putExtra(NOTE_UPDATE_EXTRA, it)
@@ -227,10 +256,12 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
             true
         }
         R.id.action_share ->{
+            this.playUiSong(TAP_SONG)
             shareNote()
             true
         }
         R.id.action_cloth ->{
+            this.playUiSong(TAP_SONG)
             imagePickerFragment.show(supportFragmentManager, "image picker")
             true
         }
@@ -245,7 +276,8 @@ class NoteDetailActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClick
         val share = Intent.createChooser(Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, noteWithFolders?.note?.let {
-                String.format(toSpannable(it.noteTitle).toString() +"\n\n"+ toSpannable(it.noteContent).toString()+"\n\n"+"Shared with NeverNote") }
+                String.format(toSpannable(it.noteTitle).toString() +"\n\n"+ toSpannable(it.noteContent).toString()+"\n\n"+"Shared with NeverNote," +
+                        " you can download on playstore https://bit.ly/3khjZt0") }
             )
 
             // (Optional) Here we're setting the title of the content

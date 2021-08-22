@@ -5,6 +5,7 @@
     <color name="black">#1c1c1c</color>
     <color name="white">#fefefe</color>
     <color name="icon_color">#fefefe</color>
+    <color name="action_color">#252525</color>
     <color name="ic_launcher_background">#FEFEFE</color>
     <color name="hidden_text">#707C80</color>
     <color name="search_button_color">#282828</color>

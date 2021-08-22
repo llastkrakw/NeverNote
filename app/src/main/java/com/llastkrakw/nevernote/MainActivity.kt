@@ -23,7 +23,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.llastkrakw.nevernote.core.constants.DELETE_SONG
 import com.llastkrakw.nevernote.core.constants.IS_NOTIFICATION_TASK_EXTRA
+import com.llastkrakw.nevernote.core.constants.SUCCESS_SONG
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
+import com.llastkrakw.nevernote.core.extension.toast
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.getLocationOnScreen
 import com.llastkrakw.nevernote.core.utilities.ViewUtils.Companion.setTextViewDrawableColor
 import com.llastkrakw.nevernote.databinding.ActivityMainBinding
@@ -91,6 +96,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             add.setOnClickListener {
+                this@MainActivity.playUiSong(TAP_SONG)
                 when(viewPager.currentItem){
                     0 -> {
                         val intent = Intent(this@MainActivity, AddNoteActivity::class.java)
@@ -115,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             })
 
             addFolderBottomSheet.addFolderButton.setOnClickListener {
+                this@MainActivity.playUiSong(TAP_SONG)
                 showAddFolderDialog()
             }
 
@@ -156,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_switch_layout -> {
+            this@MainActivity.playUiSong(TAP_SONG)
             (noteViewModel.isGrid.value!!).let {
                 noteViewModel.toggleLayoutNoteManager(!it)
             }
@@ -164,11 +172,13 @@ class MainActivity : AppCompatActivity() {
 
         R.id.action_delete_note ->{
             Log.d("multi", "delete note")
+            this.playUiSong(DELETE_SONG)
             noteViewModel.deleteNotes()
             true
         }
 
         R.id.action_select_all_note ->{
+            this.playUiSong(TAP_SONG)
             noteViewModel.allNoteSelected.value?.let{
                 if (it)
                     noteViewModel.deselectAll()
@@ -180,6 +190,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         R.id.action_folder_note ->{
+            this.playUiSong(TAP_SONG)
             toggleBottomSheet()
             true
         }
@@ -229,16 +240,22 @@ class MainActivity : AppCompatActivity() {
         val cancelButton = folderView.findViewById<TextView>(R.id.add_folder_cancel)
 
         addButton.setOnClickListener {
+            this.playUiSong(TAP_SONG)
            editText.text?.let {
                if(it.toString().isNotEmpty()){
                    val folder = Folder(null, it.toString(), Date())
                    noteViewModel.insertFolder(folder)
+                   this.playUiSong(SUCCESS_SONG)
                    alertDialog.cancel()
+               }
+               else{
+                   toast("You can't add empty folder !")
                }
            }
         }
 
         cancelButton.setOnClickListener {
+            this.playUiSong(TAP_SONG)
             alertDialog.cancel()
         }
 

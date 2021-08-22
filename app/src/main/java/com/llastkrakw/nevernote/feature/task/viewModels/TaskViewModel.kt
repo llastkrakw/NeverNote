@@ -46,15 +46,16 @@ class TaskViewModel(private val taskRepository: TaskRepository, private val app 
         task.taskId = taskRepository.insertTask(task)
         if (selectedTime != null)
             addTaskReminder(task, selectedTime)
+        app.toast("task ${task.taskContent} was added")
     }
 
     fun deleteTask(task: Task) = viewModelScope.launch {
         taskRepository.deleteTask(task)
+        app.toast("task ${task.taskContent} was deleted")
     }
 
     fun updateTask(task: Task) = viewModelScope.launch {
         taskRepository.updateTask(task)
-        app.toast("task ${task.taskContent} was update")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

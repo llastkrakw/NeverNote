@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.DELETE_SONG
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.core.utilities.SwipeCallback
 import com.llastkrakw.nevernote.databinding.FragmentTaskBinding
 import com.llastkrakw.nevernote.feature.task.adapters.TaskAdapter
@@ -83,12 +86,14 @@ class TaskFragment : Fragment() {
 
 
                 searchTask.setOnClickListener {
+                    context?.playUiSong(TAP_SONG)
                     val searchIntent = Intent(context, SearchTaskActivity::class.java)
                     context?.startActivity(searchIntent)
                 }
 
                 val swipeIncompleteCallback = object : SwipeCallback(it){
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        context?.playUiSong(DELETE_SONG)
                         val position = viewHolder.absoluteAdapterPosition
                         val task = incompleteTaskAdapter.currentList[position]
                         taskViewModel.deleteTask(task)
@@ -97,6 +102,7 @@ class TaskFragment : Fragment() {
 
                 val swipeCompleteCallback = object : SwipeCallback(it){
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        context?.playUiSong(DELETE_SONG)
                         val position = viewHolder.absoluteAdapterPosition
                         val task = completeTaskAdapter.currentList[position]
                         taskViewModel.deleteTask(task)

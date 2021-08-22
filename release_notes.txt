@@ -1,1 +1,12 @@
-codemagic release
+CAPTURE IDEAS
+- Write, collect and capture ideas in the form of notes and notebooks.
+- Add different types of content to your notes: 
+audio & wallpaper for now.
+- Style your notes with a full-featured text editor.
+- Add reminders to your notes so they are useful when you need them.
+
+
+
+GET ORGANIZED
+- Manage your to-do list with the Tasks feature: set up due dates and reminders so you never miss a deadline.
+- Get instant access to your important information in the Home dashboard.

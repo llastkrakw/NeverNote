@@ -87,14 +87,16 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
             emit(id)
         }
         Log.d("note_update", "note ${note.noteTitle} was added")
-        app.toast("note ${toSpannable(note.noteTitle)} was added")
+        if (note.noteContent.isNotEmpty())
+            app.toast("note ${toSpannable(note.noteTitle)} was added")
     }
 
 
     fun updateNote(note: Note) = viewModelScope.launch {
         Log.d("note_update", note.noteContent)
         noteRepository.updateNote(note)
-        app.toast("note ${toSpannable(note.noteTitle)} was update")
+        if (note.noteContent.isNotEmpty())
+            app.toast("note ${toSpannable(note.noteTitle)} was updated")
     }
 
 
@@ -121,7 +123,6 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
             Log.d("multi", "notes ${it.size}")
         }
         _isClear.postValue(false)
-        app.toast("note ${toSpannable(note.noteTitle)} was selected")
     }
 
     fun selectAll(){
@@ -150,7 +151,6 @@ class NoteViewModel(private val noteRepository: NoteRepository, private val app:
                 it.remove(note)
             Log.d("multi", "notes ${it.size}")
         }
-        app.toast("note ${toSpannable(note.noteTitle)} was deselected")
     }
 
 

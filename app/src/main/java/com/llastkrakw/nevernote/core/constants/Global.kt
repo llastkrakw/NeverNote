@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Looper
 import android.provider.MediaStore
+import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.extension.getFilenameExtension
 import java.util.*
 
@@ -28,6 +29,15 @@ const val RECORDING_RUNNING = 0
 const val RECORDING_STOPPED = 1
 const val RECORDING_PAUSED = 2
 const val RECORDING_CANCELED = 4
+
+// UI Song
+const val TAP_SONG = R.raw.ui_tap_variant
+const val DELETE_SONG = R.raw.navigation_transition_left
+const val SUCCESS_SONG = R.raw.hero_simple_celebration
+const val SELECTION_SONG = R.raw.navigation_selection_complete_celebration
+const val DESELECTION_SONG = R.raw.ui_unlock
+const val BACK_SONG = R.raw.navigation_backward_selection
+
 
 // shared preferences
 const val SAVE_RECORDINGS = "save_recordings"

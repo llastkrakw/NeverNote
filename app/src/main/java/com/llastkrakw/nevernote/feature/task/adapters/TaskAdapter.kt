@@ -16,7 +16,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.DESELECTION_SONG
+import com.llastkrakw.nevernote.core.constants.SELECTION_SONG
 import com.llastkrakw.nevernote.core.extension.dateExpired
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.feature.task.datas.entities.Task
 import com.llastkrakw.nevernote.feature.task.viewModels.TaskViewModel
 import java.util.*
@@ -56,6 +59,10 @@ class TaskAdapter(private val taskViewModel: TaskViewModel, private val owner: L
 
             status.setOnClickListener {
                 (it as CheckBox).isChecked.let { isChecked ->
+                    if (isChecked)
+                        itemView.context.playUiSong(SELECTION_SONG)
+                    else
+                        itemView.context.playUiSong(DESELECTION_SONG)
                     task.taskStatus = isChecked
                     taskViewModel.updateTask(task)
                 }

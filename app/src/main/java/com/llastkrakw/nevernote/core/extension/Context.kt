@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.database.Cursor
 import android.media.MediaMetadataRetriever
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -39,6 +40,7 @@ fun getCurrentFormattedDateTime(): String {
     val simpleDateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
     return simpleDateFormat.format(Date(System.currentTimeMillis()))
 }
+
 
 fun Context.isPathOnSD(path: String) = sdCardPath.isNotEmpty() && path.startsWith(sdCardPath)
 
@@ -334,5 +336,15 @@ private val physicalPaths = arrayListOf(
     "/storage/usbdisk1",
     "/storage/usbdisk2"
 )
+
+fun Context.playUiSong(songId : Int){
+    val mediaPlayer: MediaPlayer? = MediaPlayer.create(this, songId).apply {
+        setOnCompletionListener {
+            release()
+        }
+    }
+
+    mediaPlayer?.start()
+}
 
 

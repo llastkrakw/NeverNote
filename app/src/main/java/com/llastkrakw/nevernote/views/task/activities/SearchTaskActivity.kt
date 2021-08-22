@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.BACK_SONG
+import com.llastkrakw.nevernote.core.constants.DELETE_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.core.utilities.SwipeCallback
 import com.llastkrakw.nevernote.databinding.ActivitySearchTaskBinding
 import com.llastkrakw.nevernote.feature.task.adapters.TaskAdapter
@@ -43,6 +46,7 @@ class SearchTaskActivity : AppCompatActivity() {
         binding.apply {
 
             cancelSearchTask.setOnClickListener {
+                this@SearchTaskActivity.playUiSong(BACK_SONG)
                 onBackPressed()
             }
 
@@ -76,6 +80,7 @@ class SearchTaskActivity : AppCompatActivity() {
 
             val swipeCompleteCallback = object : SwipeCallback(this@SearchTaskActivity){
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    this@SearchTaskActivity.playUiSong(DELETE_SONG)
                     val position = viewHolder.absoluteAdapterPosition
                     val task = taskAdapter.currentList[position]
                     taskViewModel.deleteTask(task)

@@ -21,7 +21,7 @@
                 android:elevation="4dp"
                 android:theme="@style/Theme.NeverNote.ActionBar"
                 app:popupTheme="@style/Theme.NeverNote.ActionBar.PopUp"
-                android:background="@color/icon_color"
+                android:background="@color/action_color"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

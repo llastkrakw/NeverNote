@@ -38,6 +38,10 @@ import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.BACK_SONG
+import com.llastkrakw.nevernote.core.constants.DELETE_SONG
+import com.llastkrakw.nevernote.core.constants.SUCCESS_SONG
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
 import com.llastkrakw.nevernote.core.extension.*
 import com.llastkrakw.nevernote.core.utilities.Editor
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
@@ -200,6 +204,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
 
             val swipeCompleteCallback = object : SwipeCallback(this@AddNoteActivity){
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    playUiSong(DELETE_SONG)
                     noteViewModel.allRecordRef.observe(this@AddNoteActivity, {
                         val position = viewHolder.absoluteAdapterPosition
                         val recording = recordAdapter.currentList[position]
@@ -230,30 +235,37 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
         binding.apply {
 
             makeBold.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 editor.makeBold()
             }
 
             makeItalic.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 editor.makeItalic()
             }
 
             makeUnderline.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 editor.makeUnderline()
             }
 
             increaseSize.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 editor.increaseSize()
             }
 
             alignLeft.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 editor.alignLeft()
             }
 
             alignRight.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 editor.alignRight()
             }
 
             addColor.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 ColorPickerDialog
                         .Builder(this@AddNoteActivity)
                         .setColorShape(ColorShape.CIRCLE)
@@ -264,6 +276,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             }
 
             addBullet.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 if (editTextNoteContent.selectionStart != editTextNoteContent.selectionEnd)
                     editor.makeBulletList(editTextNoteContent.text.subSequence(
                         editTextNoteContent.selectionStart,
@@ -272,6 +285,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             }
 
             addLink.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 if (editTextNoteContent.selectionStart != editTextNoteContent.selectionEnd)
                     editor.setUrl(
                         editTextNoteContent.text.subSequence(
@@ -282,6 +296,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             }
 
             addRecorder.setOnClickListener {
+                this@AddNoteActivity.playUiSong(TAP_SONG)
                 if (!permissionsIsGranted(requiredPermissions)) {
                     ActivityCompat.requestPermissions(this@AddNoteActivity, requiredPermissions, 200)
                 }
@@ -299,6 +314,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                 ), IMAGE_REQUEST_CODE
             )*/
 
+           playUiSong(TAP_SONG)
            imagePickerFragment.show(supportFragmentManager, "image picker")
         }
     }
@@ -338,11 +354,13 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.undo_action -> {
+            playUiSong(TAP_SONG)
             editor.undo()
             invalidateOptionsMenu()
             true
         }
         R.id.redo_action -> {
+            playUiSong(TAP_SONG)
             editor.redo()
             invalidateOptionsMenu()
             true
@@ -354,6 +372,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                 noteForUpdate!!.note.noteTitle = binding.editTextNoteTitle.text.toHtml()
                 noteForUpdate!!.note.noteContent = binding.editTextNoteContent.text.toHtml()
                 replyIntent.putExtra(NOTE_UPDATE_EXTRA, noteForUpdate)
+                this.playUiSong(SUCCESS_SONG)
                 setResult(Activity.RESULT_OK, replyIntent)
             }
             else{
@@ -361,6 +380,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
                     note.noteTitle = binding.editTextNoteTitle.text.toHtml()
                     note.noteContent = binding.editTextNoteContent.text.toHtml()
                     noteViewModel.updateNote(note)
+                    this.playUiSong(SUCCESS_SONG)
                     Log.d("note_body", "noteBody ${binding.editTextNoteContent.text.toHtml()}")
                 }
             }
@@ -376,6 +396,7 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        this.playUiSong(BACK_SONG)
         noteViewModel.deleteNote(note)
         onBackPressed()
         return true

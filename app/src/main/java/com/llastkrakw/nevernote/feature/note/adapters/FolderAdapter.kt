@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.feature.note.datas.entities.FolderWithNotes
 import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModel
 import com.llastkrakw.nevernote.views.notes.activities.FolderDetailActivity
@@ -50,6 +52,7 @@ class FolderAdapter(private val noteViewModel: NoteViewModel, private val owner:
         }
 
         override fun onClick(v: View?) {
+            v?.context?.playUiSong(TAP_SONG)
             val intentDetail = Intent(v?.context, FolderDetailActivity::class.java)
             intentDetail.putExtra(EXTRA_FOLDER, currentFolderWithNotes)
             v?.context?.startActivity(intentDetail)

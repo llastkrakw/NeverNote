@@ -19,7 +19,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.llastkrakw.nevernote.R
 import com.llastkrakw.nevernote.core.constants.MAX_CONTENT
 import com.llastkrakw.nevernote.core.constants.MAX_TITLE
+import com.llastkrakw.nevernote.core.constants.SELECTION_SONG
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
 import com.llastkrakw.nevernote.core.extension.dateExpired
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.core.utilities.FormatUtils.Companion.toSimpleString
 import com.llastkrakw.nevernote.core.utilities.SpanUtils.Companion.toSpannable
 import com.llastkrakw.nevernote.feature.note.datas.entities.Note
@@ -121,6 +124,7 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
         override fun onLongClick(v: View?): Boolean {
             if (v != null) {
                 Log.d("multi", owner.toString())
+                v.context?.playUiSong(SELECTION_SONG)
                 noteViewModel.selectedNotes.observe(owner, {
 
                     if(it.contains(currentNote)){
@@ -147,11 +151,13 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
                     Log.d("multi", it.toString())
                     if(it.contains(currentNote)){
                         Log.d("multi", "note clicked ${currentNote.noteId}")
+                        v?.context?.playUiSong(TAP_SONG)
                         check.visibility = View.GONE
                         noteViewModel.deselectNote(currentNote)
                     }
                     else{
                         Log.d("multi", "note clicked ${currentNote.noteId}")
+                        v?.context?.playUiSong(SELECTION_SONG)
                         check.visibility = View.VISIBLE
                         noteViewModel.selectNote(currentNote)
                     }
@@ -166,6 +172,7 @@ class OtherNoteAdapter(private val noteViewModel: NoteViewModel, private val own
 
                     if(noteWithFolders != null){
                         Log.d("go_detail", noteWithFolders.note.noteId.toString())
+                        v?.context?.playUiSong(TAP_SONG)
                         intentDetail.putExtra(NOTE_EXTRA, noteWithFolders)
                         v?.context?.startActivity(intentDetail)
                     }

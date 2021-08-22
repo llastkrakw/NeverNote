@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.llastkrakw.nevernote.NeverNoteApplication
 import com.llastkrakw.nevernote.R
+import com.llastkrakw.nevernote.core.constants.TAP_SONG
+import com.llastkrakw.nevernote.core.extension.playUiSong
 import com.llastkrakw.nevernote.databinding.FragmentNoteBinding
 import com.llastkrakw.nevernote.feature.note.adapters.FolderAdapter
 import com.llastkrakw.nevernote.feature.note.adapters.NoteAdapter
@@ -102,11 +104,13 @@ class NoteFragment : Fragment() {
             })
 
             noteToggle.setOnClickListener {
+                context?.playUiSong(TAP_SONG)
                 toggleAdapter()
                 verifyNext(this)
             }
 
             searchNote.setOnClickListener {
+                context?.playUiSong(TAP_SONG)
                 val  intent = Intent(context, SearchNoteActivity::class.java)
                 activity?.startActivity(intent)
             }
