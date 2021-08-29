@@ -58,6 +58,7 @@ import com.llastkrakw.nevernote.feature.note.viewModels.NoteViewModelFactory
 import com.llastkrakw.nevernote.views.notes.activities.NoteDetailActivity.Companion.NOTE_UPDATE_EXTRA
 import com.llastkrakw.nevernote.views.notes.fragments.RecordDialogFragment
 import com.llastkrakw.nevernote.views.notes.fragments.RecordDialogFragment.Companion.NOTE_ID_FOR_SERVICE
+import java.lang.NullPointerException
 import java.util.*
 
 
@@ -197,7 +198,13 @@ class AddNoteActivity : AppCompatActivity(), ImagePickerBottomsheet.ItemClickLis
             recordRecycler.layoutManager = LinearLayoutManager(this@AddNoteActivity)
 
             noteViewModel.allRecordRef.observe(this@AddNoteActivity, {
-                recordAdapter.submitList(getRecordForNote(noteForUpdate, noteId!!, it))
+                try {
+                    if(it.isNotEmpty())
+                        recordAdapter.submitList(getRecordForNote(noteForUpdate, noteId!!, it))
+                }
+                catch (error : NullPointerException){
+                    Log.d("crash", "null crash in add note")
+                }
             })
 
             recordRecycler.adapter = recordAdapter
